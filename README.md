@@ -99,7 +99,7 @@ version: '3'
 services:
   opnsense-exporter:
     image: ghcr.io/athennamind/opnsense-exporter:latest
-    container_name: opensense-exporter
+    container_name: opnsense-exporter
     restart: always
     command:
       - --opnsense.protocol=https
@@ -132,7 +132,7 @@ version: '3'
 services:
   opnsense-exporter:
     image: ghcr.io/athennamind/opnsense-exporter:latest
-    container_name: opensense-exporter
+    container_name: opnsense-exporter
     restart: always
     command:
       - --opnsense.protocol=https
