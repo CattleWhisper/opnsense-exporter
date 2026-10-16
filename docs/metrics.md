@@ -51,6 +51,14 @@ opnsense_firewall_in_ipv6_block_packets | Gauge | interface | Firewall | The num
 opnsense_firewall_in_ipv6_pass_packets | Gauge | interface | Firewall | The number of IPv6 incoming packets that were passed by the firewall by interface | --exporter.disable-firewall |
 opnsense_firewall_out_ipv6_block_packets | Gauge | interface | Firewall | The number of IPv6 outgoing packets that were blocked by the firewall by interface | --exporter.disable-firewall |
 opnsense_firewall_out_ipv6_pass_packets | Gauge | interface | Firewall | The number of IPv6 outgoing packets that were passed by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_in_ipv4_block_bytes_total | Counter | interface | Firewall | The number of IPv4 incoming bytes that were blocked by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_in_ipv4_pass_bytes_total | Counter | interface | Firewall | The number of IPv4 incoming bytes that were passed by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_out_ipv4_block_bytes_total | Counter | interface | Firewall | The number of IPv4 outgoing bytes that were blocked by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_out_ipv4_pass_bytes_total | Counter | interface | Firewall | The number of IPv4 outgoing bytes that were passed by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_in_ipv6_block_bytes_total | Counter | interface | Firewall | The number of IPv6 incoming bytes that were blocked by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_in_ipv6_pass_bytes_total | Counter | interface | Firewall | The number of IPv6 incoming bytes that were passed by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_out_ipv6_block_bytes_total | Counter | interface | Firewall | The number of IPv6 outgoing bytes that were blocked by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_out_ipv6_pass_bytes_total | Counter | interface | Firewall | The number of IPv6 outgoing bytes that were passed by the firewall by interface | --exporter.disable-firewall |
 
 ### Firmware
 

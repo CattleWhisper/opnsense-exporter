@@ -19,6 +19,16 @@ type firewallCollector struct {
 	inIPv6BlockPackets  *prometheus.Desc
 	outIPv6BlockPackets *prometheus.Desc
 
+	inIPv4PassBytes   *prometheus.Desc
+	outIPv4PassBytes  *prometheus.Desc
+	inIPv4BlockBytes  *prometheus.Desc
+	outIPv4BlockBytes *prometheus.Desc
+
+	inIPv6PassBytes   *prometheus.Desc
+	outIPv6PassBytes  *prometheus.Desc
+	inIPv6BlockBytes  *prometheus.Desc
+	outIPv6BlockBytes *prometheus.Desc
+
 	subsystem string
 	instance  string
 }
@@ -77,6 +87,46 @@ func (c *firewallCollector) Register(namespace, instanceLabel string, log *slog.
 		"The number of IPv6 outgoing packets that were blocked by the firewall by interface",
 		[]string{"interface"},
 	)
+
+	c.inIPv4PassBytes = buildPrometheusDesc(c.subsystem, "in_ipv4_pass_bytes_total",
+		"The number of IPv4 incoming bytes that were allowed to pass through the firewall by interface",
+		[]string{"interface"},
+	)
+
+	c.outIPv4PassBytes = buildPrometheusDesc(c.subsystem, "out_ipv4_pass_bytes_total",
+		"The number of IPv4 outgoing bytes that were allowed to pass through the firewall by interface",
+		[]string{"interface"},
+	)
+
+	c.inIPv4BlockBytes = buildPrometheusDesc(c.subsystem, "in_ipv4_block_bytes_total",
+		"The number of IPv4 incoming bytes that were blocked by the firewall by interface",
+		[]string{"interface"},
+	)
+
+	c.outIPv4BlockBytes = buildPrometheusDesc(c.subsystem, "out_ipv4_block_bytes_total",
+		"The number of IPv4 outgoing bytes that were blocked by the firewall by interface",
+		[]string{"interface"},
+	)
+
+	c.inIPv6PassBytes = buildPrometheusDesc(c.subsystem, "in_ipv6_pass_bytes_total",
+		"The number of IPv6 incoming bytes that were allowed to pass through the firewall by interface",
+		[]string{"interface"},
+	)
+
+	c.outIPv6PassBytes = buildPrometheusDesc(c.subsystem, "out_ipv6_pass_bytes_total",
+		"The number of IPv6 outgoing bytes that were allowed to pass through the firewall by interface",
+		[]string{"interface"},
+	)
+
+	c.inIPv6BlockBytes = buildPrometheusDesc(c.subsystem, "in_ipv6_block_bytes_total",
+		"The number of IPv6 incoming bytes that were blocked by the firewall by interface",
+		[]string{"interface"},
+	)
+
+	c.outIPv6BlockBytes = buildPrometheusDesc(c.subsystem, "out_ipv6_block_bytes_total",
+		"The number of IPv6 outgoing bytes that were blocked by the firewall by interface",
+		[]string{"interface"},
+	)
 }
 
 func (c *firewallCollector) Describe(ch chan<- *prometheus.Desc) {
@@ -89,6 +139,16 @@ func (c *firewallCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.outIPv6PassPackets
 	ch <- c.inIPv6BlockPackets
 	ch <- c.outIPv6BlockPackets
+
+	ch <- c.inIPv4PassBytes
+	ch <- c.outIPv4PassBytes
+	ch <- c.inIPv4BlockBytes
+	ch <- c.outIPv4BlockBytes
+
+	ch <- c.inIPv6PassBytes
+	ch <- c.outIPv6PassBytes
+	ch <- c.inIPv6BlockBytes
+	ch <- c.outIPv6BlockBytes
 }
 
 func (c *firewallCollector) Update(client *opnsense.Client, ch chan<- prometheus.Metric) *opnsense.APICallError {
@@ -112,6 +172,26 @@ func (c *firewallCollector) Update(client *opnsense.Client, ch chan<- prometheus
 			ch <- prometheus.MustNewConstMetric(
 				metric,
 				prometheus.GaugeValue,
+				float64(value),
+				v.InterfaceName,
+				c.instance,
+			)
+		}
+
+		bytesValueMapping := map[*prometheus.Desc]int64{
+			c.inIPv4PassBytes:   v.In4PassBytes,
+			c.outIPv4PassBytes:  v.Out4PassBytes,
+			c.inIPv4BlockBytes:  v.In4BlockBytes,
+			c.outIPv4BlockBytes: v.Out4BlockBytes,
+			c.inIPv6PassBytes:   v.In6PassBytes,
+			c.outIPv6PassBytes:  v.Out6PassBytes,
+			c.inIPv6BlockBytes:  v.In6BlockBytes,
+			c.outIPv6BlockBytes: v.Out6BlockBytes,
+		}
+		for metric, value := range bytesValueMapping {
+			ch <- prometheus.MustNewConstMetric(
+				metric,
+				prometheus.CounterValue,
 				float64(value),
 				v.InterfaceName,
 				c.instance,
