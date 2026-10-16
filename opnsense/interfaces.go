@@ -1,5 +1,10 @@
 package opnsense
 
+import (
+	"strconv"
+	"strings"
+)
+
 type InterfaceDetails struct {
 	Device                    string `json:"device"`
 	Driver                    string `json:"driver"`
@@ -55,6 +60,34 @@ type Interface struct {
 	InputErrors           int
 	OutputErrors          int
 	Collisions            int
+
+	// Optional fields. They are parsed leniently, so a release that
+	// omits or reformats one of them does not break the scrape.
+	// A nil value means the field was missing or not numeric.
+	InputQueueDrops           *float64
+	SendQueueDrops            *float64
+	SendQueueLength           *float64
+	SendQueueMaxLength        *float64
+	PacketsForUnknownProtocol *float64
+	PromiscuousListeners      *float64
+	LinkState                 *float64
+	LineRateBits              *float64
+	UptimeAtAttachOrStatReset *float64
+}
+
+// parseOptionalNumber parses a numeric ifinfo value, dropping an optional
+// unit suffix (e.g. "1000000000 bit/s"). It returns nil if the value is
+// missing or not a number.
+func parseOptionalNumber(value, suffix string) *float64 {
+	value = strings.TrimSpace(strings.TrimSuffix(strings.TrimSpace(value), suffix))
+	if value == "" {
+		return nil
+	}
+	n, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		return nil
+	}
+	return &n
 }
 
 type Interfaces struct {
@@ -109,6 +142,16 @@ func (c *Client) FetchInterfaces() (Interfaces, *APICallError) {
 			InputErrors:           convertedValues[v.InputErrors],
 			OutputErrors:          convertedValues[v.OutputErrors],
 			Collisions:            convertedValues[v.Collisions],
+
+			InputQueueDrops:           parseOptionalNumber(v.InputQueueDrops, ""),
+			SendQueueDrops:            parseOptionalNumber(v.SendQueueDrops, ""),
+			SendQueueLength:           parseOptionalNumber(v.SendQueueLength, ""),
+			SendQueueMaxLength:        parseOptionalNumber(v.SendQueueMaxLength, ""),
+			PacketsForUnknownProtocol: parseOptionalNumber(v.PacketsForUnknownProtocol, ""),
+			PromiscuousListeners:      parseOptionalNumber(v.PromiscuousListeners, ""),
+			LinkState:                 parseOptionalNumber(v.LinkState, ""),
+			LineRateBits:              parseOptionalNumber(v.LineRate, "bit/s"),
+			UptimeAtAttachOrStatReset: parseOptionalNumber(v.UptimeAtAttachOrStatReset, ""),
 		})
 	}
 
