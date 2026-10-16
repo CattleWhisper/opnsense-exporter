@@ -19,6 +19,18 @@ type interfacesCollector struct {
 	outputErrors          *prometheus.Desc
 	collisions            *prometheus.Desc
 
+	packetsReceived      *prometheus.Desc
+	packetsTransmitted   *prometheus.Desc
+	inputQueueDrops      *prometheus.Desc
+	sendQueueDrops       *prometheus.Desc
+	sendQueueLength      *prometheus.Desc
+	sendQueueMaxLength   *prometheus.Desc
+	unknownProtocol      *prometheus.Desc
+	promiscuousListeners *prometheus.Desc
+	linkState            *prometheus.Desc
+	lineRate             *prometheus.Desc
+	statsResetUptime     *prometheus.Desc
+
 	subsystem string
 	instance  string
 }
@@ -71,6 +83,50 @@ func (c *interfacesCollector) Register(namespace, instanceLabel string, log *slo
 		"Collisions on this interface by interface name and device",
 		[]string{"interface", "device", "type"},
 	)
+	c.packetsReceived = buildPrometheusDesc(c.subsystem, "received_packets_total",
+		"Packets received on this interface by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.packetsTransmitted = buildPrometheusDesc(c.subsystem, "transmitted_packets_total",
+		"Packets transmitted on this interface by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.inputQueueDrops = buildPrometheusDesc(c.subsystem, "input_queue_drops_total",
+		"Packets dropped on input because the receive queue was full, by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.sendQueueDrops = buildPrometheusDesc(c.subsystem, "send_queue_drops_total",
+		"Packets dropped on output because the send queue was full, by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.sendQueueLength = buildPrometheusDesc(c.subsystem, "send_queue_length",
+		"Current length of the send queue by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.sendQueueMaxLength = buildPrometheusDesc(c.subsystem, "send_queue_max_length",
+		"Maximum length of the send queue by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.unknownProtocol = buildPrometheusDesc(c.subsystem, "unknown_protocol_packets_total",
+		"Packets received for an unknown or unsupported protocol by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.promiscuousListeners = buildPrometheusDesc(c.subsystem, "promiscuous_listeners",
+		"Number of promiscuous listeners on this interface by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.linkState = buildPrometheusDesc(c.subsystem, "link_state",
+		"Link state of the interface (0 = unknown, 1 = down, 2 = up) by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.lineRate = buildPrometheusDesc(c.subsystem, "line_rate_bits",
+		"Line rate of the interface in bits per second by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
+	c.statsResetUptime = buildPrometheusDesc(c.subsystem, "stats_reset_uptime_seconds",
+		"System uptime in seconds when the interface was attached or its counters were last reset, by interface name and device",
+		[]string{"interface", "device", "type"},
+	)
 }
 
 func (c *interfacesCollector) Describe(ch chan<- *prometheus.Desc) {
@@ -82,6 +138,17 @@ func (c *interfacesCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- c.inputErrors
 	ch <- c.outputErrors
 	ch <- c.collisions
+	ch <- c.packetsReceived
+	ch <- c.packetsTransmitted
+	ch <- c.inputQueueDrops
+	ch <- c.sendQueueDrops
+	ch <- c.sendQueueLength
+	ch <- c.sendQueueMaxLength
+	ch <- c.unknownProtocol
+	ch <- c.promiscuousListeners
+	ch <- c.linkState
+	ch <- c.lineRate
+	ch <- c.statsResetUptime
 }
 
 func (c *interfacesCollector) update(ch chan<- prometheus.Metric, desc *prometheus.Desc, valueType prometheus.ValueType, value float64, labelValues ...string) {
@@ -105,6 +172,30 @@ func (c *interfacesCollector) Update(client *opnsense.Client, ch chan<- promethe
 		c.update(ch, c.inputErrors, prometheus.CounterValue, float64(iface.InputErrors), iface.Name, iface.Device, iface.Type, c.instance)
 		c.update(ch, c.outputErrors, prometheus.CounterValue, float64(iface.OutputErrors), iface.Name, iface.Device, iface.Type, c.instance)
 		c.update(ch, c.collisions, prometheus.CounterValue, float64(iface.Collisions), iface.Name, iface.Device, iface.Type, c.instance)
+		c.update(ch, c.packetsReceived, prometheus.CounterValue, float64(iface.PacketsReceived), iface.Name, iface.Device, iface.Type, c.instance)
+		c.update(ch, c.packetsTransmitted, prometheus.CounterValue, float64(iface.PacketsTransmitted), iface.Name, iface.Device, iface.Type, c.instance)
+
+		optional := []struct {
+			desc      *prometheus.Desc
+			valueType prometheus.ValueType
+			value     *float64
+		}{
+			{c.inputQueueDrops, prometheus.CounterValue, iface.InputQueueDrops},
+			{c.sendQueueDrops, prometheus.CounterValue, iface.SendQueueDrops},
+			{c.sendQueueLength, prometheus.GaugeValue, iface.SendQueueLength},
+			{c.sendQueueMaxLength, prometheus.GaugeValue, iface.SendQueueMaxLength},
+			{c.unknownProtocol, prometheus.CounterValue, iface.PacketsForUnknownProtocol},
+			{c.promiscuousListeners, prometheus.GaugeValue, iface.PromiscuousListeners},
+			{c.linkState, prometheus.GaugeValue, iface.LinkState},
+			{c.lineRate, prometheus.GaugeValue, iface.LineRateBits},
+			{c.statsResetUptime, prometheus.GaugeValue, iface.UptimeAtAttachOrStatReset},
+		}
+		for _, m := range optional {
+			if m.value == nil {
+				continue
+			}
+			c.update(ch, m.desc, m.valueType, *m.value, iface.Name, iface.Device, iface.Type, c.instance)
+		}
 	}
 
 	return nil

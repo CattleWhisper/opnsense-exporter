@@ -38,6 +38,17 @@ opnsense_interfaces_transmitted_multicasts_total | Counter | interface, device, 
 opnsense_interfaces_input_errors_total | Counter | interface, device, type | Interfaces | Input errors on this interface by interface name and device | n/a |
 opnsense_interfaces_output_errors_total | Counter | interface, device, type | Interfaces | Output errors on this interface by interface name and device | n/a |
 opnsense_interfaces_collisions_total | Counter | interface, device, type | Interfaces | Collisions on this interface by interface name and device | n/a |
+opnsense_interfaces_received_packets_total | Counter | interface, device, type | Interfaces | Total number of received packets on this interface by interface name and device | n/a |
+opnsense_interfaces_transmitted_packets_total | Counter | interface, device, type | Interfaces | Total number of transmitted packets on this interface by interface name and device | n/a |
+opnsense_interfaces_input_queue_drops_total | Counter | interface, device, type | Interfaces | Packets dropped on input because the receive queue was full, by interface name and device | n/a |
+opnsense_interfaces_send_queue_drops_total | Counter | interface, device, type | Interfaces | Packets dropped on output because the send queue was full, by interface name and device | n/a |
+opnsense_interfaces_send_queue_length | Gauge | interface, device, type | Interfaces | Current length of the send queue by interface name and device | n/a |
+opnsense_interfaces_send_queue_max_length | Gauge | interface, device, type | Interfaces | Maximum length of the send queue by interface name and device | n/a |
+opnsense_interfaces_unknown_protocol_packets_total | Counter | interface, device, type | Interfaces | Packets received for an unknown or unsupported protocol by interface name and device | n/a |
+opnsense_interfaces_promiscuous_listeners | Gauge | interface, device, type | Interfaces | Number of promiscuous listeners on this interface by interface name and device | n/a |
+opnsense_interfaces_link_state | Gauge | interface, device, type | Interfaces | Link state of the interface (0 = unknown, 1 = down, 2 = up) by interface name and device | n/a |
+opnsense_interfaces_line_rate_bits | Gauge | interface, device, type | Interfaces | Line rate of the interface in bits per second by interface name and device | n/a |
+opnsense_interfaces_stats_reset_uptime_seconds | Gauge | interface, device, type | Interfaces | System uptime in seconds when the interface was attached or its counters were last reset, by interface name and device | n/a |
 
 ### Firewall
 
@@ -59,6 +70,17 @@ opnsense_firewall_in_ipv6_block_bytes_total | Counter | interface | Firewall | T
 opnsense_firewall_in_ipv6_pass_bytes_total | Counter | interface | Firewall | The number of IPv6 incoming bytes that were passed by the firewall by interface | --exporter.disable-firewall |
 opnsense_firewall_out_ipv6_block_bytes_total | Counter | interface | Firewall | The number of IPv6 outgoing bytes that were blocked by the firewall by interface | --exporter.disable-firewall |
 opnsense_firewall_out_ipv6_pass_bytes_total | Counter | interface | Firewall | The number of IPv6 outgoing bytes that were passed by the firewall by interface | --exporter.disable-firewall |
+opnsense_firewall_interface_references | Gauge | interface | Firewall | The number of pf rules and tables referencing the interface | --exporter.disable-firewall |
+opnsense_firewall_interface_counters_cleared_timestamp_seconds | Gauge | interface | Firewall | Unix time the pf counters of the interface were last cleared. OPNsense reports it in the firewall's local time without a zone, so it is interpreted in the exporter's time zone | --exporter.disable-firewall |
+opnsense_firewall_state_table_entries | Gauge | n/a | Firewall | The current number of entries in the pf state table | --exporter.disable-firewall |
+opnsense_firewall_state_table_operations_total | Counter | operation | Firewall | The number of pf state table operations by operation (searches, inserts, removals) | --exporter.disable-firewall |
+opnsense_firewall_source_tracking_entries | Gauge | n/a | Firewall | The current number of entries in the pf source tracking table | --exporter.disable-firewall |
+opnsense_firewall_source_tracking_operations_total | Counter | operation | Firewall | The number of pf source tracking table operations by operation (searches, inserts, removals) | --exporter.disable-firewall |
+opnsense_firewall_pf_counters_total | Counter | counter | Firewall | The global pf counters by counter (match, bad-offset, fragment, short, normalize, memory, ...) | --exporter.disable-firewall |
+opnsense_firewall_pf_limit_counters_total | Counter | counter | Firewall | The global pf limit counters by counter (max-states-per-rule, max-src-states, ...) | --exporter.disable-firewall |
+opnsense_firewall_memory_limit | Gauge | pool | Firewall | The hard limit of the pf memory pools by pool (states, src-nodes, frags, tables, table-entries, ...) | --exporter.disable-firewall |
+opnsense_firewall_timeout_seconds | Gauge | timeout | Firewall | The configured pf timeouts in seconds by timeout (tcp.first, tcp.established, udp.single, interval, ...) | --exporter.disable-firewall |
+opnsense_firewall_adaptive_states | Gauge | threshold | Firewall | The pf adaptive timeout thresholds in number of states by threshold (adaptive.start, adaptive.end) | --exporter.disable-firewall |
 
 ### Firmware
 
