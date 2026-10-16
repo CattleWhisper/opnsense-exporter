@@ -17,7 +17,7 @@ RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} CGO_ENABLED=0 \
 
 FROM --platform=${BUILDPLATFORM:-linux/amd64} gcr.io/distroless/static-debian12:latest
 
-LABEL org.opencontainers.image.source=https://github.com/AthennaMind/opnsense-exporter
+LABEL org.opencontainers.image.source=https://github.com/CattleWhisper/opnsense-exporter
 LABEL org.opencontainers.image.version=${Version}
 LABEL org.opencontainers.image.authors="The AthennaMind Authors admins@athennamind.com"
 LABEL org.opencontainers.image.title="OPNsense Prometheus Exporter"
