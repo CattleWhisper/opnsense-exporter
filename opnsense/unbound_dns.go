@@ -196,8 +196,8 @@ type UnboundDNSOverview struct {
 	BlocklistSize     int
 	Passed            int
 	AnswerRcodesTotal int
-	AnswerBogusTotal  int
-	AnswerSecureTotal int
+	AnswerBogusTotal  int64
+	AnswerSecureTotal int64
 	UptimeSeconds     float64
 }
 

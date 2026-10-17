@@ -128,3 +128,14 @@ func TestParsePFTimeouts(t *testing.T) {
 		t.Errorf("unexpected adaptive thresholds: %+v", timeouts.AdaptiveStates)
 	}
 }
+
+// Packet counters above 2^31 must decode on 32-bit platforms too.
+func TestFirewallPFStatLargePacketCounter(t *testing.T) {
+	var stat FirewallPFStat
+	if err := json.Unmarshal([]byte(`{"in4_pass_packets": 5000000000}`), &stat); err != nil {
+		t.Fatalf("failed to unmarshal: %v", err)
+	}
+	if stat.In4PassPackets != 5000000000 {
+		t.Errorf("expected 5000000000, got %d", stat.In4PassPackets)
+	}
+}

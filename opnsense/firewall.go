@@ -13,15 +13,15 @@ type FirewallPFStat struct {
 	// as an ISO 8601 timestamp without zone in the firewall's local time.
 	Cleared string `json:"cleared"`
 
-	In4PassPackets   int `json:"in4_pass_packets"`
-	In4BlockPackets  int `json:"in4_block_packets"`
-	Out4PassPackets  int `json:"out4_pass_packets"`
-	Out4BlockPackets int `json:"out4_block_packets"`
+	In4PassPackets   int64 `json:"in4_pass_packets"`
+	In4BlockPackets  int64 `json:"in4_block_packets"`
+	Out4PassPackets  int64 `json:"out4_pass_packets"`
+	Out4BlockPackets int64 `json:"out4_block_packets"`
 
-	In6PassPackets   int `json:"in6_pass_packets"`
-	In6BlockPackets  int `json:"in6_block_packets"`
-	Out6PassPackets  int `json:"out6_pass_packets"`
-	Out6BlockPackets int `json:"out6_block_packets"`
+	In6PassPackets   int64 `json:"in6_pass_packets"`
+	In6BlockPackets  int64 `json:"in6_block_packets"`
+	Out6PassPackets  int64 `json:"out6_pass_packets"`
+	Out6BlockPackets int64 `json:"out6_block_packets"`
 
 	In4PassBytes   int64 `json:"in4_pass_bytes"`
 	In4BlockBytes  int64 `json:"in4_block_bytes"`

@@ -28,8 +28,8 @@ type KeaDhcpv4LeasesResponse struct {
 }
 
 type KeaDhcpv4Lease struct {
-	Expiration    int
-	ValidLifetime int
+	Expiration    int64
+	ValidLifetime int64
 	Mac           string
 	MacInfo       string
 	ClientId      string
@@ -66,8 +66,8 @@ func parseDHCPv4Leases(response KeaDhcpv4LeasesResponse) (KeaDhcpv4Leases, *APIC
 			data.ReservedLeaseCount[row.InterfaceName] += 1
 		}
 
-		expiration := int(row.Expiration)
-		lifetime := int(row.ValidLifetime)
+		expiration := int64(row.Expiration)
+		lifetime := int64(row.ValidLifetime)
 
 		// Add the information in
 		data.Leases = append(data.Leases, KeaDhcpv4Lease{

@@ -50,16 +50,16 @@ type Interface struct {
 	Name                  string
 	Device                string
 	Type                  string
-	MTU                   int
-	PacketsReceived       int
-	PacketsTransmitted    int
-	BytesReceived         int
-	BytesTransmitted      int
-	MulticastsReceived    int
-	MulticastsTransmitted int
-	InputErrors           int
-	OutputErrors          int
-	Collisions            int
+	MTU                   int64
+	PacketsReceived       int64
+	PacketsTransmitted    int64
+	BytesReceived         int64
+	BytesTransmitted      int64
+	MulticastsReceived    int64
+	MulticastsTransmitted int64
+	InputErrors           int64
+	OutputErrors          int64
+	Collisions            int64
 
 	// Optional fields. They are parsed leniently, so a release that
 	// omits or reformats one of them does not break the scrape.

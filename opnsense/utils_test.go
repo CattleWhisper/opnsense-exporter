@@ -72,7 +72,7 @@ func TestParsePercentage(t *testing.T) {
 
 func TestSliceIntToMapStringInt(t *testing.T) {
 	input := []string{"1", "2", "3"}
-	expected := map[string]int{"1": 1, "2": 2, "3": 3}
+	expected := map[string]int64{"1": 1, "2": 2, "3": 3}
 
 	result, _ := sliceIntToMapStringInt(input, "test")
 
@@ -112,5 +112,16 @@ func TestParseStringToBool(t *testing.T) {
 					tc.value, result, tc.expected)
 			}
 		})
+	}
+}
+
+// Counters above 2^31 must parse on 32-bit platforms (linux/arm/v6) too.
+func TestParseStringToIntLargeCounter(t *testing.T) {
+	got, err := parseStringToInt("123456789012", "test")
+	if err != nil {
+		t.Fatalf("unexpected error: %s", err.Error())
+	}
+	if got != 123456789012 {
+		t.Errorf("expected 123456789012, got %d", got)
 	}
 }
