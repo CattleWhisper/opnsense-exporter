@@ -2,6 +2,7 @@ package opnsense
 
 import (
 	"strconv"
+	"strings"
 )
 
 type HealthCheckResponse struct {
@@ -74,6 +75,26 @@ const (
 	HealthCheckStatusOK_v25_1 = 2
 )
 
+// metadataStatusOK reports whether a metadata status value means OK.
+// OPNsense 25.1 reports it as the number 2, while 26.1 went back to the
+// string "OK" inside the metadata section.
+func metadataStatusOK(status interface{}, numeric int) bool {
+	if s, ok := status.(string); ok && strings.EqualFold(strings.TrimSpace(s), HealthCheckStatusOK) {
+		return true
+	}
+	return numeric == HealthCheckStatusOK_v25_1
+}
+
+// SystemStatusOK reports whether the health check considers the system
+// healthy, in any of the formats OPNsense has used: the legacy top-level
+// "OK", the 25.1 numeric metadata status, and the 26.1 string metadata status.
+func (h *HealthCheckResponse) SystemStatusOK() bool {
+	if h.System.Status == HealthCheckStatusOK {
+		return true
+	}
+	return metadataStatusOK(h.Metadata.System.Status, h.GetMetadataSystemStatus())
+}
+
 // FirewallStatusOK reports whether the health check considers the
 // firewall healthy. Newer OPNsense releases omit the firewall section
 // entirely when there is nothing to report, so an absent section
@@ -83,7 +104,7 @@ func (h *HealthCheckResponse) FirewallStatusOK() bool {
 		return h.Firewall.Status == HealthCheckStatusOK
 	}
 	if h.Metadata.Firewall.Status != nil {
-		return h.GetMetadataFirewallStatus() == HealthCheckStatusOK_v25_1
+		return metadataStatusOK(h.Metadata.Firewall.Status, h.GetMetadataFirewallStatus())
 	}
 	return true
 }

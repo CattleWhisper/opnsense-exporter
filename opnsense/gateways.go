@@ -2,6 +2,7 @@ package opnsense
 
 import (
 	"log/slog"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -125,6 +126,20 @@ func convertPriorityToString(priority interface{}) string {
 	}
 }
 
+// gatewayMeasurementUnavailable is what OPNsense reports for delay,
+// stddev and loss while dpinger has no data for a gateway.
+const gatewayMeasurementUnavailable = "~"
+
+// parseGatewayMeasurement parses a gateway delay, stddev or loss value.
+// The "~" placeholder means no measurement is available; it maps to the
+// -1 sentinel without logging a parse warning on every scrape.
+func (c *Client) parseGatewayMeasurement(value string, regex *regexp.Regexp, unit, name string) float64 {
+	if strings.TrimSpace(value) == gatewayMeasurementUnavailable {
+		return -1.0
+	}
+	return parseStringToFloatWithReplace(value, regex, unit, name, c.log)
+}
+
 // parseGatewayStatus parses a string status to a GatewayStatus type.
 // OPNsense may report combined statuses such as "Latency, Packetloss";
 // the worst component wins (Offline > ForcedDown > Loss > Latency > Pending > Online).
@@ -194,9 +209,9 @@ func (c *Client) FetchGateways() (Gateways, *APICallError) {
 		stdDev := -1.0
 		loss := -1.0
 		if !v.Disabled && !parseStringToBool(v.MonitorDisable) {
-			delay = parseStringToFloatWithReplace(v.Delay, c.gatewayRTTRegex, " ms", "rtt", c.log)
-			stdDev = parseStringToFloatWithReplace(v.StdDev, c.gatewayRTTRegex, " ms", "rttd", c.log)
-			loss = parseStringToFloatWithReplace(v.Loss, c.gatewayLossRegex, " %", "loss", c.log)
+			delay = c.parseGatewayMeasurement(v.Delay, c.gatewayRTTRegex, " ms", "rtt")
+			stdDev = c.parseGatewayMeasurement(v.StdDev, c.gatewayRTTRegex, " ms", "rttd")
+			loss = c.parseGatewayMeasurement(v.Loss, c.gatewayLossRegex, " %", "loss")
 		}
 
 		g := Gateway{

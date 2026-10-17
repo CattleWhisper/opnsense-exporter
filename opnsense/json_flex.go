@@ -3,7 +3,9 @@ package opnsense
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -91,5 +93,53 @@ func (s *flexStringSlice) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 	*s = flexStringSlice{str}
+	return nil
+}
+
+// flexCounter is a kernel counter decoded from JSON. A broken FreeBSD
+// counter can underflow and wrap to a value close to 2^64, which OPNsense
+// then serializes as a float such as 1.8446744073679895e+19. Such a value
+// does not fit an int64, and a plain int64 field would fail the whole
+// response, dropping every metric of the collector.
+//
+// flexCounter accepts integers, quoted integers and floats. A value that
+// is negative, not finite or does not fit an int64 decodes to 0, so one
+// bogus counter only zeroes itself. Empty string and null decode to 0.
+type flexCounter int64
+
+func (f *flexCounter) UnmarshalJSON(b []byte) error {
+	b = bytes.TrimSpace(b)
+	if len(b) > 0 && b[0] == '"' {
+		var s string
+		if err := json.Unmarshal(b, &s); err != nil {
+			return fmt.Errorf("flexCounter: %w", err)
+		}
+		b = []byte(strings.TrimSpace(s))
+	}
+	if len(b) == 0 || bytes.Equal(b, []byte("null")) {
+		*f = 0
+		return nil
+	}
+
+	if n, err := strconv.ParseInt(string(b), 10, 64); err == nil {
+		*f = flexCounter(max(n, 0))
+		return nil
+	}
+
+	v, err := strconv.ParseFloat(string(b), 64)
+	if err != nil {
+		var numErr *strconv.NumError
+		if errors.As(err, &numErr) && errors.Is(numErr.Err, strconv.ErrRange) {
+			*f = 0
+			return nil
+		}
+		return fmt.Errorf("flexCounter: cannot parse %q as a number: %w", string(b), err)
+	}
+	// 2^63 is the first float64 above the int64 range.
+	if math.IsNaN(v) || v < 0 || v >= math.Exp2(63) {
+		*f = 0
+		return nil
+	}
+	*f = flexCounter(v)
 	return nil
 }

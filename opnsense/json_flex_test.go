@@ -98,3 +98,56 @@ func TestKeaDhcpv4RowAllStringsJSON(t *testing.T) {
 		t.Errorf("IsReserved len = %d, want 1 (reserved)", len(row.IsReserved))
 	}
 }
+
+func TestFlexCounterUnmarshal(t *testing.T) {
+	tests := []struct {
+		in   string
+		want flexCounter
+	}{
+		{`42`, 42},
+		{`"42"`, 42},
+		{`0`, 0},
+		{`123456789012`, 123456789012},
+		{`9223372036854775807`, 9223372036854775807},
+		{`""`, 0},
+		{`null`, 0},
+		{`1.5e3`, 1500},
+		// wrapped kernel counters (#112)
+		{`1.8446744073679895e+19`, 0},
+		{`18446744073679895000`, 0},
+		{`9223372036854775808`, 0},
+		{`-5`, 0},
+	}
+	for _, tt := range tests {
+		var f flexCounter
+		if err := json.Unmarshal([]byte(tt.in), &f); err != nil {
+			t.Errorf("flexCounter(%s): unexpected error: %v", tt.in, err)
+			continue
+		}
+		if f != tt.want {
+			t.Errorf("flexCounter(%s) = %d, want %d", tt.in, f, tt.want)
+		}
+	}
+
+	var f flexCounter
+	if err := json.Unmarshal([]byte(`"abc"`), &f); err == nil {
+		t.Errorf("flexCounter(\"abc\"): expected an error")
+	}
+}
+
+// A single wrapped counter must not fail the whole protocol statistics
+// response (#112).
+func TestProtocolStatisticsWrappedCounter(t *testing.T) {
+	payload := `{"statistics": {"udp": {"delivered-packets": 1.8446744073679895e+19, "output-packets": 77}, "tcp": {"sent-packets": 5000000000}}}`
+	var resp protocolStatisticsResponse
+	if err := json.Unmarshal([]byte(payload), &resp); err != nil {
+		t.Fatalf("failed to unmarshal: %v", err)
+	}
+	if resp.Statistics.UDP.DeliveredPackets != 0 {
+		t.Errorf("expected the wrapped counter to decode to 0, got %d", resp.Statistics.UDP.DeliveredPackets)
+	}
+	if resp.Statistics.UDP.OutputPackets != 77 || resp.Statistics.TCP.SentPackets != 5000000000 {
+		t.Errorf("unexpected counters: udp output %d, tcp sent %d",
+			resp.Statistics.UDP.OutputPackets, resp.Statistics.TCP.SentPackets)
+	}
+}
