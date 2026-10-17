@@ -12,9 +12,9 @@ selected instance and time range.
 
 ## Import
 
-Dashboards → New → Import → upload the JSON file. Each dashboard asks for a
-Prometheus data source through its `Data source` variable, so no `__inputs`
-mapping is needed.
+Dashboards → New → Import → upload the JSON file. None of the dashboards
+asks for input on import: each one picks the Prometheus data source through
+its `Data source` variable at the top of the page.
 
 ## Requirements
 
