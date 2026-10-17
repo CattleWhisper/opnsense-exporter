@@ -1,5 +1,7 @@
 package opnsense
 
+import "log/slog"
+
 type servicesSearchResponse struct {
 	Rows []struct {
 		ID          string `json:"id"`
@@ -33,6 +35,46 @@ type Services struct {
 	TotalStopped int
 }
 
+// parseServices converts the services search response. Several instances
+// of one service (e.g. udpbroadcastrelay) can share a name and an empty
+// description; emitting each of them would register the same label set
+// twice and fail the whole /metrics response. Such instances are merged
+// into one entry that reports stopped if any of them is stopped. The
+// running/stopped totals still count every instance.
+func parseServices(resp servicesSearchResponse, log *slog.Logger) ([]Service, int, int) {
+	var list []Service
+	var running, stopped int
+	index := make(map[[2]string]int)
+
+	for _, service := range resp.Rows {
+		switch service.Running {
+		case 0:
+			stopped++
+		case 1:
+			running++
+		}
+
+		status := ServiceStatus(service.Running)
+		key := [2]string{service.Name, service.Description}
+		if i, seen := index[key]; seen {
+			log.Debug("merging services with the same name and description",
+				"component", "opnsense-client", "name", service.Name, "description", service.Description)
+			if status == ServiceStatusStopped {
+				list[i].Status = ServiceStatusStopped
+			}
+			continue
+		}
+
+		index[key] = len(list)
+		list = append(list, Service{
+			Status:      status,
+			Description: service.Description,
+			Name:        service.Name,
+		})
+	}
+	return list, running, stopped
+}
+
 func (c *Client) FetchServices() (Services, *APICallError) {
 	var resp servicesSearchResponse
 	var services Services
@@ -50,22 +92,7 @@ func (c *Client) FetchServices() (Services, *APICallError) {
 	if err != nil {
 		return services, err
 	}
-	for _, service := range resp.Rows {
-
-		switch service.Running {
-		case 0:
-			services.TotalStopped++
-		case 1:
-			services.TotalRunning++
-		}
-
-		s := Service{
-			Status:      ServiceStatus(service.Running),
-			Description: service.Description,
-			Name:        service.Name,
-		}
-		services.Services = append(services.Services, s)
-	}
+	services.Services, services.TotalRunning, services.TotalStopped = parseServices(resp, c.log)
 
 	return services, nil
 }
