@@ -3,248 +3,248 @@ package opnsense
 type protocolStatisticsResponse struct {
 	Statistics struct {
 		TCP struct {
-			SentPackets                           int64 `json:"sent-packets"`
-			SentDataPackets                       int64 `json:"sent-data-packets"`
-			SentDataBytes                         int64 `json:"sent-data-bytes"`
-			SentRetransmittedPackets              int64 `json:"sent-retransmitted-packets"`
-			SentRetransmittedBytes                int64 `json:"sent-retransmitted-bytes"`
-			SentUnnecessaryRetransmittedPackets   int64 `json:"sent-unnecessary-retransmitted-packets"`
-			SentResendsByMtuDiscovery             int64 `json:"sent-resends-by-mtu-discovery"`
-			SentAckOnlyPackets                    int64 `json:"sent-ack-only-packets"`
-			SentPacketsDelayed                    int64 `json:"sent-packets-delayed"`
-			SentUrgOnlyPackets                    int64 `json:"sent-urg-only-packets"`
-			SentWindowProbePackets                int64 `json:"sent-window-probe-packets"`
-			SentWindowUpdatePackets               int64 `json:"sent-window-update-packets"`
-			SentControlPackets                    int64 `json:"sent-control-packets"`
-			ReceivedPackets                       int64 `json:"received-packets"`
-			ReceivedAckPackets                    int64 `json:"received-ack-packets"`
-			ReceivedAckBytes                      int64 `json:"received-ack-bytes"`
-			ReceivedDuplicateAcks                 int64 `json:"received-duplicate-acks"`
-			ReceivedUDPTunneledPkts               int64 `json:"received-udp-tunneled-pkts"`
-			ReceivedBadUDPTunneledPkts            int64 `json:"received-bad-udp-tunneled-pkts"`
-			ReceivedAcksForUnsentData             int64 `json:"received-acks-for-unsent-data"`
-			ReceivedInSequencePackets             int64 `json:"received-in-sequence-packets"`
-			ReceivedInSequenceBytes               int64 `json:"received-in-sequence-bytes"`
-			ReceivedCompletelyDuplicatePackets    int64 `json:"received-completely-duplicate-packets"`
-			ReceivedCompletelyDuplicateBytes      int64 `json:"received-completely-duplicate-bytes"`
-			ReceivedOldDuplicatePackets           int64 `json:"received-old-duplicate-packets"`
-			ReceivedSomeDuplicatePackets          int64 `json:"received-some-duplicate-packets"`
-			ReceivedSomeDuplicateBytes            int64 `json:"received-some-duplicate-bytes"`
-			ReceivedOutOfOrder                    int64 `json:"received-out-of-order"`
-			ReceivedOutOfOrderBytes               int64 `json:"received-out-of-order-bytes"`
-			ReceivedAfterWindowPackets            int64 `json:"received-after-window-packets"`
-			ReceivedAfterWindowBytes              int64 `json:"received-after-window-bytes"`
-			ReceivedWindowProbes                  int64 `json:"received-window-probes"`
-			ReceiveWindowUpdatePackets            int64 `json:"receive-window-update-packets"`
-			ReceivedAfterClosePackets             int64 `json:"received-after-close-packets"`
-			DiscardBadChecksum                    int64 `json:"discard-bad-checksum"`
-			DiscardBadHeaderOffset                int64 `json:"discard-bad-header-offset"`
-			DiscardTooShort                       int64 `json:"discard-too-short"`
-			DiscardReassemblyQueueFull            int64 `json:"discard-reassembly-queue-full"`
-			ConnectionRequests                    int64 `json:"connection-requests"`
-			ConnectionsAccepts                    int64 `json:"connections-accepts"`
-			BadConnectionAttempts                 int64 `json:"bad-connection-attempts"`
-			ListenQueueOverflows                  int64 `json:"listen-queue-overflows"`
-			IgnoredInWindowResets                 int64 `json:"ignored-in-window-resets"`
-			ConnectionsEstablished                int64 `json:"connections-established"`
-			ConnectionsHostcacheRtt               int64 `json:"connections-hostcache-rtt"`
-			ConnectionsHostcacheRttvar            int64 `json:"connections-hostcache-rttvar"`
-			ConnectionsHostcacheSsthresh          int64 `json:"connections-hostcache-ssthresh"`
-			ConnectionsClosed                     int64 `json:"connections-closed"`
-			ConnectionDrops                       int64 `json:"connection-drops"`
-			ConnectionsUpdatedRttOnClose          int64 `json:"connections-updated-rtt-on-close"`
-			ConnectionsUpdatedVarianceOnClose     int64 `json:"connections-updated-variance-on-close"`
-			ConnectionsUpdatedSsthreshOnClose     int64 `json:"connections-updated-ssthresh-on-close"`
-			EmbryonicConnectionsDropped           int64 `json:"embryonic-connections-dropped"`
-			SegmentsUpdatedRtt                    int64 `json:"segments-updated-rtt"`
-			SegmentUpdateAttempts                 int64 `json:"segment-update-attempts"`
-			RetransmitTimeouts                    int64 `json:"retransmit-timeouts"`
-			ConnectionsDroppedByRetransmitTimeout int64 `json:"connections-dropped-by-retransmit-timeout"`
-			PersistTimeout                        int64 `json:"persist-timeout"`
-			ConnectionsDroppedByPersistTimeout    int64 `json:"connections-dropped-by-persist-timeout"`
-			ConnectionsDroppedByFinwait2Timeout   int64 `json:"connections-dropped-by-finwait2-timeout"`
-			KeepaliveTimeout                      int64 `json:"keepalive-timeout"`
-			KeepaliveProbes                       int64 `json:"keepalive-probes"`
-			ConnectionsDroppedByKeepalives        int64 `json:"connections-dropped-by-keepalives"`
-			AckHeaderPredictions                  int64 `json:"ack-header-predictions"`
-			DataPacketHeaderPredictions           int64 `json:"data-packet-header-predictions"`
+			SentPackets                           flexCounter `json:"sent-packets"`
+			SentDataPackets                       flexCounter `json:"sent-data-packets"`
+			SentDataBytes                         flexCounter `json:"sent-data-bytes"`
+			SentRetransmittedPackets              flexCounter `json:"sent-retransmitted-packets"`
+			SentRetransmittedBytes                flexCounter `json:"sent-retransmitted-bytes"`
+			SentUnnecessaryRetransmittedPackets   flexCounter `json:"sent-unnecessary-retransmitted-packets"`
+			SentResendsByMtuDiscovery             flexCounter `json:"sent-resends-by-mtu-discovery"`
+			SentAckOnlyPackets                    flexCounter `json:"sent-ack-only-packets"`
+			SentPacketsDelayed                    flexCounter `json:"sent-packets-delayed"`
+			SentUrgOnlyPackets                    flexCounter `json:"sent-urg-only-packets"`
+			SentWindowProbePackets                flexCounter `json:"sent-window-probe-packets"`
+			SentWindowUpdatePackets               flexCounter `json:"sent-window-update-packets"`
+			SentControlPackets                    flexCounter `json:"sent-control-packets"`
+			ReceivedPackets                       flexCounter `json:"received-packets"`
+			ReceivedAckPackets                    flexCounter `json:"received-ack-packets"`
+			ReceivedAckBytes                      flexCounter `json:"received-ack-bytes"`
+			ReceivedDuplicateAcks                 flexCounter `json:"received-duplicate-acks"`
+			ReceivedUDPTunneledPkts               flexCounter `json:"received-udp-tunneled-pkts"`
+			ReceivedBadUDPTunneledPkts            flexCounter `json:"received-bad-udp-tunneled-pkts"`
+			ReceivedAcksForUnsentData             flexCounter `json:"received-acks-for-unsent-data"`
+			ReceivedInSequencePackets             flexCounter `json:"received-in-sequence-packets"`
+			ReceivedInSequenceBytes               flexCounter `json:"received-in-sequence-bytes"`
+			ReceivedCompletelyDuplicatePackets    flexCounter `json:"received-completely-duplicate-packets"`
+			ReceivedCompletelyDuplicateBytes      flexCounter `json:"received-completely-duplicate-bytes"`
+			ReceivedOldDuplicatePackets           flexCounter `json:"received-old-duplicate-packets"`
+			ReceivedSomeDuplicatePackets          flexCounter `json:"received-some-duplicate-packets"`
+			ReceivedSomeDuplicateBytes            flexCounter `json:"received-some-duplicate-bytes"`
+			ReceivedOutOfOrder                    flexCounter `json:"received-out-of-order"`
+			ReceivedOutOfOrderBytes               flexCounter `json:"received-out-of-order-bytes"`
+			ReceivedAfterWindowPackets            flexCounter `json:"received-after-window-packets"`
+			ReceivedAfterWindowBytes              flexCounter `json:"received-after-window-bytes"`
+			ReceivedWindowProbes                  flexCounter `json:"received-window-probes"`
+			ReceiveWindowUpdatePackets            flexCounter `json:"receive-window-update-packets"`
+			ReceivedAfterClosePackets             flexCounter `json:"received-after-close-packets"`
+			DiscardBadChecksum                    flexCounter `json:"discard-bad-checksum"`
+			DiscardBadHeaderOffset                flexCounter `json:"discard-bad-header-offset"`
+			DiscardTooShort                       flexCounter `json:"discard-too-short"`
+			DiscardReassemblyQueueFull            flexCounter `json:"discard-reassembly-queue-full"`
+			ConnectionRequests                    flexCounter `json:"connection-requests"`
+			ConnectionsAccepts                    flexCounter `json:"connections-accepts"`
+			BadConnectionAttempts                 flexCounter `json:"bad-connection-attempts"`
+			ListenQueueOverflows                  flexCounter `json:"listen-queue-overflows"`
+			IgnoredInWindowResets                 flexCounter `json:"ignored-in-window-resets"`
+			ConnectionsEstablished                flexCounter `json:"connections-established"`
+			ConnectionsHostcacheRtt               flexCounter `json:"connections-hostcache-rtt"`
+			ConnectionsHostcacheRttvar            flexCounter `json:"connections-hostcache-rttvar"`
+			ConnectionsHostcacheSsthresh          flexCounter `json:"connections-hostcache-ssthresh"`
+			ConnectionsClosed                     flexCounter `json:"connections-closed"`
+			ConnectionDrops                       flexCounter `json:"connection-drops"`
+			ConnectionsUpdatedRttOnClose          flexCounter `json:"connections-updated-rtt-on-close"`
+			ConnectionsUpdatedVarianceOnClose     flexCounter `json:"connections-updated-variance-on-close"`
+			ConnectionsUpdatedSsthreshOnClose     flexCounter `json:"connections-updated-ssthresh-on-close"`
+			EmbryonicConnectionsDropped           flexCounter `json:"embryonic-connections-dropped"`
+			SegmentsUpdatedRtt                    flexCounter `json:"segments-updated-rtt"`
+			SegmentUpdateAttempts                 flexCounter `json:"segment-update-attempts"`
+			RetransmitTimeouts                    flexCounter `json:"retransmit-timeouts"`
+			ConnectionsDroppedByRetransmitTimeout flexCounter `json:"connections-dropped-by-retransmit-timeout"`
+			PersistTimeout                        flexCounter `json:"persist-timeout"`
+			ConnectionsDroppedByPersistTimeout    flexCounter `json:"connections-dropped-by-persist-timeout"`
+			ConnectionsDroppedByFinwait2Timeout   flexCounter `json:"connections-dropped-by-finwait2-timeout"`
+			KeepaliveTimeout                      flexCounter `json:"keepalive-timeout"`
+			KeepaliveProbes                       flexCounter `json:"keepalive-probes"`
+			ConnectionsDroppedByKeepalives        flexCounter `json:"connections-dropped-by-keepalives"`
+			AckHeaderPredictions                  flexCounter `json:"ack-header-predictions"`
+			DataPacketHeaderPredictions           flexCounter `json:"data-packet-header-predictions"`
 			Syncache                              struct {
-				EntriesAdded   int64 `json:"entries-added"`
-				Retransmitted  int64 `json:"retransmitted"`
-				Duplicates     int64 `json:"duplicates"`
-				Dropped        int64 `json:"dropped"`
-				Completed      int64 `json:"completed"`
-				BucketOverflow int64 `json:"bucket-overflow"`
-				CacheOverflow  int64 `json:"cache-overflow"`
-				Reset          int64 `json:"reset"`
-				Stale          int64 `json:"stale"`
-				Aborted        int64 `json:"aborted"`
-				BadAck         int64 `json:"bad-ack"`
-				Unreachable    int64 `json:"unreachable"`
-				ZoneFailures   int64 `json:"zone-failures"`
-				SentCookies    int64 `json:"sent-cookies"`
-				ReceivdCookies int64 `json:"receivd-cookies"`
+				EntriesAdded   flexCounter `json:"entries-added"`
+				Retransmitted  flexCounter `json:"retransmitted"`
+				Duplicates     flexCounter `json:"duplicates"`
+				Dropped        flexCounter `json:"dropped"`
+				Completed      flexCounter `json:"completed"`
+				BucketOverflow flexCounter `json:"bucket-overflow"`
+				CacheOverflow  flexCounter `json:"cache-overflow"`
+				Reset          flexCounter `json:"reset"`
+				Stale          flexCounter `json:"stale"`
+				Aborted        flexCounter `json:"aborted"`
+				BadAck         flexCounter `json:"bad-ack"`
+				Unreachable    flexCounter `json:"unreachable"`
+				ZoneFailures   flexCounter `json:"zone-failures"`
+				SentCookies    flexCounter `json:"sent-cookies"`
+				ReceivdCookies flexCounter `json:"receivd-cookies"`
 			} `json:"syncache"`
 			Hostcache struct {
-				EntriesAdded    int64 `json:"entries-added"`
-				BufferOverflows int64 `json:"buffer-overflows"`
+				EntriesAdded    flexCounter `json:"entries-added"`
+				BufferOverflows flexCounter `json:"buffer-overflows"`
 			} `json:"hostcache"`
 			Sack struct {
-				RecoveryEpisodes    int64 `json:"recovery-episodes"`
-				SegmentRetransmits  int64 `json:"segment-retransmits"`
-				ByteRetransmits     int64 `json:"byte-retransmits"`
-				ReceivedBlocks      int64 `json:"received-blocks"`
-				SentOptionBlocks    int64 `json:"sent-option-blocks"`
-				ScoreboardOverflows int64 `json:"scoreboard-overflows"`
+				RecoveryEpisodes    flexCounter `json:"recovery-episodes"`
+				SegmentRetransmits  flexCounter `json:"segment-retransmits"`
+				ByteRetransmits     flexCounter `json:"byte-retransmits"`
+				ReceivedBlocks      flexCounter `json:"received-blocks"`
+				SentOptionBlocks    flexCounter `json:"sent-option-blocks"`
+				ScoreboardOverflows flexCounter `json:"scoreboard-overflows"`
 			} `json:"sack"`
 			Ecn struct {
-				CePackets            int64 `json:"ce-packets"`
-				Ect0Packets          int64 `json:"ect0-packets"`
-				Ect1Packets          int64 `json:"ect1-packets"`
-				Handshakes           int64 `json:"handshakes"`
-				CongestionReductions int64 `json:"congestion-reductions"`
+				CePackets            flexCounter `json:"ce-packets"`
+				Ect0Packets          flexCounter `json:"ect0-packets"`
+				Ect1Packets          flexCounter `json:"ect1-packets"`
+				Handshakes           flexCounter `json:"handshakes"`
+				CongestionReductions flexCounter `json:"congestion-reductions"`
 			} `json:"ecn"`
 			TCPSignature struct {
-				ReceivedGoodSignature int64 `json:"received-good-signature"`
-				ReceivedBadSignature  int64 `json:"received-bad-signature"`
-				FailedMakeSignature   int64 `json:"failed-make-signature"`
-				NoSignatureExpected   int64 `json:"no-signature-expected"`
-				NoSignatureProvided   int64 `json:"no-signature-provided"`
+				ReceivedGoodSignature flexCounter `json:"received-good-signature"`
+				ReceivedBadSignature  flexCounter `json:"received-bad-signature"`
+				FailedMakeSignature   flexCounter `json:"failed-make-signature"`
+				NoSignatureExpected   flexCounter `json:"no-signature-expected"`
+				NoSignatureProvided   flexCounter `json:"no-signature-provided"`
 			} `json:"tcp-signature"`
 			Pmtud struct {
-				PmtudActivated       int64 `json:"pmtud-activated"`
-				PmtudActivatedMinMss int64 `json:"pmtud-activated-min-mss"`
-				PmtudFailed          int64 `json:"pmtud-failed"`
+				PmtudActivated       flexCounter `json:"pmtud-activated"`
+				PmtudActivatedMinMss flexCounter `json:"pmtud-activated-min-mss"`
+				PmtudFailed          flexCounter `json:"pmtud-failed"`
 			} `json:"pmtud"`
 			Tw struct {
-				TwResponds int64 `json:"tw_responds"`
-				TwRecycles int64 `json:"tw_recycles"`
-				TwResets   int64 `json:"tw_resets"`
+				TwResponds flexCounter `json:"tw_responds"`
+				TwRecycles flexCounter `json:"tw_recycles"`
+				TwResets   flexCounter `json:"tw_resets"`
 			} `json:"tw"`
 			TCPConnectionCountByState struct {
-				Closed      int64 `json:"CLOSED"`
-				Listen      int64 `json:"LISTEN"`
-				SynSent     int64 `json:"SYN_SENT"`
-				SynRcvd     int64 `json:"SYN_RCVD"`
-				Established int64 `json:"ESTABLISHED"`
-				CloseWait   int64 `json:"CLOSE_WAIT"`
-				FinWait1    int64 `json:"FIN_WAIT_1"`
-				Closing     int64 `json:"CLOSING"`
-				LastAck     int64 `json:"LAST_ACK"`
-				FinWait2    int64 `json:"FIN_WAIT_2"`
-				TimeWait    int64 `json:"TIME_WAIT"`
+				Closed      flexCounter `json:"CLOSED"`
+				Listen      flexCounter `json:"LISTEN"`
+				SynSent     flexCounter `json:"SYN_SENT"`
+				SynRcvd     flexCounter `json:"SYN_RCVD"`
+				Established flexCounter `json:"ESTABLISHED"`
+				CloseWait   flexCounter `json:"CLOSE_WAIT"`
+				FinWait1    flexCounter `json:"FIN_WAIT_1"`
+				Closing     flexCounter `json:"CLOSING"`
+				LastAck     flexCounter `json:"LAST_ACK"`
+				FinWait2    flexCounter `json:"FIN_WAIT_2"`
+				TimeWait    flexCounter `json:"TIME_WAIT"`
 			} `json:"TCP connection count by state"`
 		} `json:"tcp"`
 		UDP struct {
-			ReceivedDatagrams            int64 `json:"received-datagrams"`
-			DroppedIncompleteHeaders     int64 `json:"dropped-incomplete-headers"`
-			DroppedBadDataLength         int64 `json:"dropped-bad-data-length"`
-			DroppedBadChecksum           int64 `json:"dropped-bad-checksum"`
-			DroppedNoChecksum            int64 `json:"dropped-no-checksum"`
-			DroppedNoSocket              int64 `json:"dropped-no-socket"`
-			DroppedBroadcastMulticast    int64 `json:"dropped-broadcast-multicast"`
-			DroppedFullSocketBuffer      int64 `json:"dropped-full-socket-buffer"`
-			NotForHashedPcb              int64 `json:"not-for-hashed-pcb"`
-			DeliveredPackets             int64 `json:"delivered-packets"`
-			OutputPackets                int64 `json:"output-packets"`
-			MulticastSourceFilterMatches int64 `json:"multicast-source-filter-matches"`
+			ReceivedDatagrams            flexCounter `json:"received-datagrams"`
+			DroppedIncompleteHeaders     flexCounter `json:"dropped-incomplete-headers"`
+			DroppedBadDataLength         flexCounter `json:"dropped-bad-data-length"`
+			DroppedBadChecksum           flexCounter `json:"dropped-bad-checksum"`
+			DroppedNoChecksum            flexCounter `json:"dropped-no-checksum"`
+			DroppedNoSocket              flexCounter `json:"dropped-no-socket"`
+			DroppedBroadcastMulticast    flexCounter `json:"dropped-broadcast-multicast"`
+			DroppedFullSocketBuffer      flexCounter `json:"dropped-full-socket-buffer"`
+			NotForHashedPcb              flexCounter `json:"not-for-hashed-pcb"`
+			DeliveredPackets             flexCounter `json:"delivered-packets"`
+			OutputPackets                flexCounter `json:"output-packets"`
+			MulticastSourceFilterMatches flexCounter `json:"multicast-source-filter-matches"`
 		} `json:"udp"`
 		IP struct {
-			ReceivedPackets               int64 `json:"received-packets"`
-			DroppedBadChecksum            int64 `json:"dropped-bad-checksum"`
-			DroppedBelowMinimumSize       int64 `json:"dropped-below-minimum-size"`
-			DroppedShortPackets           int64 `json:"dropped-short-packets"`
-			DroppedTooLong                int64 `json:"dropped-too-long"`
-			DroppedShortHeaderLength      int64 `json:"dropped-short-header-length"`
-			DroppedShortData              int64 `json:"dropped-short-data"`
-			DroppedBadOptions             int64 `json:"dropped-bad-options"`
-			DroppedBadVersion             int64 `json:"dropped-bad-version"`
-			ReceivedFragments             int64 `json:"received-fragments"`
-			DroppedFragments              int64 `json:"dropped-fragments"`
-			DroppedFragmentsAfterTimeout  int64 `json:"dropped-fragments-after-timeout"`
-			ReassembledPackets            int64 `json:"reassembled-packets"`
-			ReceivedLocalPackets          int64 `json:"received-local-packets"`
-			DroppedUnknownProtocol        int64 `json:"dropped-unknown-protocol"`
-			ForwardedPackets              int64 `json:"forwarded-packets"`
-			FastForwardedPackets          int64 `json:"fast-forwarded-packets"`
-			PacketsCannotForward          int64 `json:"packets-cannot-forward"`
-			ReceivedUnknownMulticastGroup int64 `json:"received-unknown-multicast-group"`
-			RedirectsSent                 int64 `json:"redirects-sent"`
-			SentPackets                   int64 `json:"sent-packets"`
-			SendPacketsFabricatedHeader   int64 `json:"send-packets-fabricated-header"`
-			DiscardNoMbufs                int64 `json:"discard-no-mbufs"`
-			DiscardNoRoute                int64 `json:"discard-no-route"`
-			SentFragments                 int64 `json:"sent-fragments"`
-			FragmentsCreated              int64 `json:"fragments-created"`
-			DiscardCannotFragment         int64 `json:"discard-cannot-fragment"`
-			DiscardTunnelNoGif            int64 `json:"discard-tunnel-no-gif"`
-			DiscardBadAddress             int64 `json:"discard-bad-address"`
+			ReceivedPackets               flexCounter `json:"received-packets"`
+			DroppedBadChecksum            flexCounter `json:"dropped-bad-checksum"`
+			DroppedBelowMinimumSize       flexCounter `json:"dropped-below-minimum-size"`
+			DroppedShortPackets           flexCounter `json:"dropped-short-packets"`
+			DroppedTooLong                flexCounter `json:"dropped-too-long"`
+			DroppedShortHeaderLength      flexCounter `json:"dropped-short-header-length"`
+			DroppedShortData              flexCounter `json:"dropped-short-data"`
+			DroppedBadOptions             flexCounter `json:"dropped-bad-options"`
+			DroppedBadVersion             flexCounter `json:"dropped-bad-version"`
+			ReceivedFragments             flexCounter `json:"received-fragments"`
+			DroppedFragments              flexCounter `json:"dropped-fragments"`
+			DroppedFragmentsAfterTimeout  flexCounter `json:"dropped-fragments-after-timeout"`
+			ReassembledPackets            flexCounter `json:"reassembled-packets"`
+			ReceivedLocalPackets          flexCounter `json:"received-local-packets"`
+			DroppedUnknownProtocol        flexCounter `json:"dropped-unknown-protocol"`
+			ForwardedPackets              flexCounter `json:"forwarded-packets"`
+			FastForwardedPackets          flexCounter `json:"fast-forwarded-packets"`
+			PacketsCannotForward          flexCounter `json:"packets-cannot-forward"`
+			ReceivedUnknownMulticastGroup flexCounter `json:"received-unknown-multicast-group"`
+			RedirectsSent                 flexCounter `json:"redirects-sent"`
+			SentPackets                   flexCounter `json:"sent-packets"`
+			SendPacketsFabricatedHeader   flexCounter `json:"send-packets-fabricated-header"`
+			DiscardNoMbufs                flexCounter `json:"discard-no-mbufs"`
+			DiscardNoRoute                flexCounter `json:"discard-no-route"`
+			SentFragments                 flexCounter `json:"sent-fragments"`
+			FragmentsCreated              flexCounter `json:"fragments-created"`
+			DiscardCannotFragment         flexCounter `json:"discard-cannot-fragment"`
+			DiscardTunnelNoGif            flexCounter `json:"discard-tunnel-no-gif"`
+			DiscardBadAddress             flexCounter `json:"discard-bad-address"`
 		} `json:"ip"`
 		Icmp struct {
-			IcmpCalls                   int64  `json:"icmp-calls"`
-			ErrorsNotFromMessage        int64  `json:"errors-not-from-message"`
-			DroppedBadCode              int64  `json:"dropped-bad-code"`
-			DroppedTooShort             int64  `json:"dropped-too-short"`
-			DroppedBadChecksum          int64  `json:"dropped-bad-checksum"`
-			DroppedBadLength            int64  `json:"dropped-bad-length"`
-			DroppedMulticastEcho        int64  `json:"dropped-multicast-echo"`
-			DroppedMulticastTimestamp   int64  `json:"dropped-multicast-timestamp"`
-			SentPackets                 int64  `json:"sent-packets"`
-			DiscardInvalidReturnAddress int64  `json:"discard-invalid-return-address"`
-			DiscardNoRoute              int64  `json:"discard-no-route"`
-			IcmpAddressResponses        string `json:"icmp-address-responses"`
+			IcmpCalls                   flexCounter `json:"icmp-calls"`
+			ErrorsNotFromMessage        flexCounter `json:"errors-not-from-message"`
+			DroppedBadCode              flexCounter `json:"dropped-bad-code"`
+			DroppedTooShort             flexCounter `json:"dropped-too-short"`
+			DroppedBadChecksum          flexCounter `json:"dropped-bad-checksum"`
+			DroppedBadLength            flexCounter `json:"dropped-bad-length"`
+			DroppedMulticastEcho        flexCounter `json:"dropped-multicast-echo"`
+			DroppedMulticastTimestamp   flexCounter `json:"dropped-multicast-timestamp"`
+			SentPackets                 flexCounter `json:"sent-packets"`
+			DiscardInvalidReturnAddress flexCounter `json:"discard-invalid-return-address"`
+			DiscardNoRoute              flexCounter `json:"discard-no-route"`
+			IcmpAddressResponses        string      `json:"icmp-address-responses"`
 		} `json:"icmp"`
 		Carp struct {
-			ReceivedInetPackets      int64 `json:"received-inet-packets"`
-			ReceivedInet6Packets     int64 `json:"received-inet6-packets"`
-			DroppedWrongTTL          int64 `json:"dropped-wrong-ttl"`
-			DroppedShortHeader       int64 `json:"dropped-short-header"`
-			DroppedBadChecksum       int64 `json:"dropped-bad-checksum"`
-			DroppedBadVersion        int64 `json:"dropped-bad-version"`
-			DroppedShortPacket       int64 `json:"dropped-short-packet"`
-			DroppedBadAuthentication int64 `json:"dropped-bad-authentication"`
-			DroppedBadVhid           int64 `json:"dropped-bad-vhid"`
-			DroppedBadAddressList    int64 `json:"dropped-bad-address-list"`
-			SentInetPackets          int64 `json:"sent-inet-packets"`
-			SentInet6Packets         int64 `json:"sent-inet6-packets"`
-			SendFailedMemoryError    int64 `json:"send-failed-memory-error"`
+			ReceivedInetPackets      flexCounter `json:"received-inet-packets"`
+			ReceivedInet6Packets     flexCounter `json:"received-inet6-packets"`
+			DroppedWrongTTL          flexCounter `json:"dropped-wrong-ttl"`
+			DroppedShortHeader       flexCounter `json:"dropped-short-header"`
+			DroppedBadChecksum       flexCounter `json:"dropped-bad-checksum"`
+			DroppedBadVersion        flexCounter `json:"dropped-bad-version"`
+			DroppedShortPacket       flexCounter `json:"dropped-short-packet"`
+			DroppedBadAuthentication flexCounter `json:"dropped-bad-authentication"`
+			DroppedBadVhid           flexCounter `json:"dropped-bad-vhid"`
+			DroppedBadAddressList    flexCounter `json:"dropped-bad-address-list"`
+			SentInetPackets          flexCounter `json:"sent-inet-packets"`
+			SentInet6Packets         flexCounter `json:"sent-inet6-packets"`
+			SendFailedMemoryError    flexCounter `json:"send-failed-memory-error"`
 		} `json:"carp"`
 		Pfsync struct {
-			ReceivedInetPackets  int64 `json:"received-inet-packets"`
-			ReceivedInet6Packets int64 `json:"received-inet6-packets"`
+			ReceivedInetPackets  flexCounter `json:"received-inet-packets"`
+			ReceivedInet6Packets flexCounter `json:"received-inet6-packets"`
 			InputHistogram       []struct {
-				Name  string `json:"name"`
-				Count int64  `json:"count"`
+				Name  string      `json:"name"`
+				Count flexCounter `json:"count"`
 			} `json:"input-histogram"`
-			DroppedBadInterface int64 `json:"dropped-bad-interface"`
-			DroppedBadTTL       int64 `json:"dropped-bad-ttl"`
-			DroppedShortHeader  int64 `json:"dropped-short-header"`
-			DroppedBadVersion   int64 `json:"dropped-bad-version"`
-			DroppedBadAuth      int64 `json:"dropped-bad-auth"`
-			DroppedBadAction    int64 `json:"dropped-bad-action"`
-			DroppedShort        int64 `json:"dropped-short"`
-			DroppedBadValues    int64 `json:"dropped-bad-values"`
-			DroppedStaleState   int64 `json:"dropped-stale-state"`
-			DroppedFailedLookup int64 `json:"dropped-failed-lookup"`
-			SentInetPackets     int64 `json:"sent-inet-packets"`
-			SendInet6Packets    int64 `json:"send-inet6-packets"`
+			DroppedBadInterface flexCounter `json:"dropped-bad-interface"`
+			DroppedBadTTL       flexCounter `json:"dropped-bad-ttl"`
+			DroppedShortHeader  flexCounter `json:"dropped-short-header"`
+			DroppedBadVersion   flexCounter `json:"dropped-bad-version"`
+			DroppedBadAuth      flexCounter `json:"dropped-bad-auth"`
+			DroppedBadAction    flexCounter `json:"dropped-bad-action"`
+			DroppedShort        flexCounter `json:"dropped-short"`
+			DroppedBadValues    flexCounter `json:"dropped-bad-values"`
+			DroppedStaleState   flexCounter `json:"dropped-stale-state"`
+			DroppedFailedLookup flexCounter `json:"dropped-failed-lookup"`
+			SentInetPackets     flexCounter `json:"sent-inet-packets"`
+			SendInet6Packets    flexCounter `json:"send-inet6-packets"`
 			OutputHistogram     []struct {
-				Name  string `json:"name"`
-				Count int64  `json:"count"`
+				Name  string      `json:"name"`
+				Count flexCounter `json:"count"`
 			} `json:"output-histogram"`
-			DiscardedNoMemory int64 `json:"discarded-no-memory"`
-			SendErrors        int64 `json:"send-errors"`
+			DiscardedNoMemory flexCounter `json:"discarded-no-memory"`
+			SendErrors        flexCounter `json:"send-errors"`
 		} `json:"pfsync"`
 		Arp struct {
-			SentRequests            int64 `json:"sent-requests"`
-			SentFailures            int64 `json:"sent-failures"`
-			SentReplies             int64 `json:"sent-replies"`
-			ReceivedRequests        int64 `json:"received-requests"`
-			ReceivedReplies         int64 `json:"received-replies"`
-			ReceivedPackets         int64 `json:"received-packets"`
-			DroppedNoEntry          int64 `json:"dropped-no-entry"`
-			EntriesTimeout          int64 `json:"entries-timeout"`
-			DroppedDuplicateAddress int64 `json:"dropped-duplicate-address"`
+			SentRequests            flexCounter `json:"sent-requests"`
+			SentFailures            flexCounter `json:"sent-failures"`
+			SentReplies             flexCounter `json:"sent-replies"`
+			ReceivedRequests        flexCounter `json:"received-requests"`
+			ReceivedReplies         flexCounter `json:"received-replies"`
+			ReceivedPackets         flexCounter `json:"received-packets"`
+			DroppedNoEntry          flexCounter `json:"dropped-no-entry"`
+			EntriesTimeout          flexCounter `json:"entries-timeout"`
+			DroppedDuplicateAddress flexCounter `json:"dropped-duplicate-address"`
 		} `json:"arp"`
 	} `json:"statistics"`
 }
@@ -279,44 +279,44 @@ func (c *Client) FetchProtocolStatistics() (ProtocolStatistics, *APICallError) {
 	}
 
 	out := ProtocolStatistics{
-		TCPSentPackets:      resp.Statistics.TCP.SentPackets,
-		TCPReceivedPackets:  resp.Statistics.TCP.ReceivedPackets,
-		ARPSentRequests:     resp.Statistics.Arp.SentRequests,
-		ARPReceivedRequests: resp.Statistics.Arp.ReceivedRequests,
+		TCPSentPackets:      int64(resp.Statistics.TCP.SentPackets),
+		TCPReceivedPackets:  int64(resp.Statistics.TCP.ReceivedPackets),
+		ARPSentRequests:     int64(resp.Statistics.Arp.SentRequests),
+		ARPReceivedRequests: int64(resp.Statistics.Arp.ReceivedRequests),
 		TCPConnectionCountByState: map[string]int64{
-			"CLOSED":      resp.Statistics.TCP.TCPConnectionCountByState.Closed,
-			"LISTEN":      resp.Statistics.TCP.TCPConnectionCountByState.Listen,
-			"SYN_SENT":    resp.Statistics.TCP.TCPConnectionCountByState.SynSent,
-			"SYN_RCVD":    resp.Statistics.TCP.TCPConnectionCountByState.SynRcvd,
-			"ESTABLISHED": resp.Statistics.TCP.TCPConnectionCountByState.Established,
-			"CLOSE_WAIT":  resp.Statistics.TCP.TCPConnectionCountByState.CloseWait,
-			"FIN_WAIT_1":  resp.Statistics.TCP.TCPConnectionCountByState.FinWait1,
-			"CLOSING":     resp.Statistics.TCP.TCPConnectionCountByState.Closing,
-			"LAST_ACK":    resp.Statistics.TCP.TCPConnectionCountByState.LastAck,
-			"FIN_WAIT_2":  resp.Statistics.TCP.TCPConnectionCountByState.FinWait2,
-			"TIME_WAIT":   resp.Statistics.TCP.TCPConnectionCountByState.TimeWait,
+			"CLOSED":      int64(resp.Statistics.TCP.TCPConnectionCountByState.Closed),
+			"LISTEN":      int64(resp.Statistics.TCP.TCPConnectionCountByState.Listen),
+			"SYN_SENT":    int64(resp.Statistics.TCP.TCPConnectionCountByState.SynSent),
+			"SYN_RCVD":    int64(resp.Statistics.TCP.TCPConnectionCountByState.SynRcvd),
+			"ESTABLISHED": int64(resp.Statistics.TCP.TCPConnectionCountByState.Established),
+			"CLOSE_WAIT":  int64(resp.Statistics.TCP.TCPConnectionCountByState.CloseWait),
+			"FIN_WAIT_1":  int64(resp.Statistics.TCP.TCPConnectionCountByState.FinWait1),
+			"CLOSING":     int64(resp.Statistics.TCP.TCPConnectionCountByState.Closing),
+			"LAST_ACK":    int64(resp.Statistics.TCP.TCPConnectionCountByState.LastAck),
+			"FIN_WAIT_2":  int64(resp.Statistics.TCP.TCPConnectionCountByState.FinWait2),
+			"TIME_WAIT":   int64(resp.Statistics.TCP.TCPConnectionCountByState.TimeWait),
 		},
-		ICMPCalls:       resp.Statistics.Icmp.IcmpCalls,
-		ICMPSentPackets: resp.Statistics.Icmp.SentPackets,
+		ICMPCalls:       int64(resp.Statistics.Icmp.IcmpCalls),
+		ICMPSentPackets: int64(resp.Statistics.Icmp.SentPackets),
 		ICMPDroppedByReason: map[string]int64{
-			"BAD_CODE":            resp.Statistics.Icmp.DroppedBadCode,
-			"TOO_SHORT":           resp.Statistics.Icmp.DroppedTooShort,
-			"BAD_CHECKSUM":        resp.Statistics.Icmp.DroppedBadChecksum,
-			"BAD_LENGTH":          resp.Statistics.Icmp.DroppedBadLength,
-			"MULTICAST_ECHO":      resp.Statistics.Icmp.DroppedMulticastEcho,
-			"MULTICAST_TIMESTAMP": resp.Statistics.Icmp.DroppedMulticastTimestamp,
+			"BAD_CODE":            int64(resp.Statistics.Icmp.DroppedBadCode),
+			"TOO_SHORT":           int64(resp.Statistics.Icmp.DroppedTooShort),
+			"BAD_CHECKSUM":        int64(resp.Statistics.Icmp.DroppedBadChecksum),
+			"BAD_LENGTH":          int64(resp.Statistics.Icmp.DroppedBadLength),
+			"MULTICAST_ECHO":      int64(resp.Statistics.Icmp.DroppedMulticastEcho),
+			"MULTICAST_TIMESTAMP": int64(resp.Statistics.Icmp.DroppedMulticastTimestamp),
 		},
-		UDPDeliveredPackets:  resp.Statistics.UDP.DeliveredPackets,
-		UDPOutputPackets:     resp.Statistics.UDP.OutputPackets,
-		UDPReceivedDatagrams: resp.Statistics.UDP.ReceivedDatagrams,
+		UDPDeliveredPackets:  int64(resp.Statistics.UDP.DeliveredPackets),
+		UDPOutputPackets:     int64(resp.Statistics.UDP.OutputPackets),
+		UDPReceivedDatagrams: int64(resp.Statistics.UDP.ReceivedDatagrams),
 		UDPDroppedByReason: map[string]int64{
-			"INCOMPLETE_HEADERS":  resp.Statistics.UDP.DroppedIncompleteHeaders,
-			"BAD_DATA_LENGTH":     resp.Statistics.UDP.DroppedBadDataLength,
-			"BAD_CHECKSUM":        resp.Statistics.UDP.DroppedBadChecksum,
-			"NO_CHECKSUM":         resp.Statistics.UDP.DroppedNoChecksum,
-			"NO_SOCKET":           resp.Statistics.UDP.DroppedNoSocket,
-			"BROADCAST_MULTICAST": resp.Statistics.UDP.DroppedBroadcastMulticast,
-			"FULL_SOCKET_BUFFER":  resp.Statistics.UDP.DroppedFullSocketBuffer,
+			"INCOMPLETE_HEADERS":  int64(resp.Statistics.UDP.DroppedIncompleteHeaders),
+			"BAD_DATA_LENGTH":     int64(resp.Statistics.UDP.DroppedBadDataLength),
+			"BAD_CHECKSUM":        int64(resp.Statistics.UDP.DroppedBadChecksum),
+			"NO_CHECKSUM":         int64(resp.Statistics.UDP.DroppedNoChecksum),
+			"NO_SOCKET":           int64(resp.Statistics.UDP.DroppedNoSocket),
+			"BROADCAST_MULTICAST": int64(resp.Statistics.UDP.DroppedBroadcastMulticast),
+			"FULL_SOCKET_BUFFER":  int64(resp.Statistics.UDP.DroppedFullSocketBuffer),
 		},
 	}
 

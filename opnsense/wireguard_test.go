@@ -136,9 +136,9 @@ func TestProcessWireguardResponseDeduplication(t *testing.T) {
 	logger := promslog.NewNopLogger()
 
 	tests := []struct {
-		name              string
-		rows              []wireguardRow
-		expectedPeers     int
+		name               string
+		rows               []wireguardRow
+		expectedPeers      int
 		expectedInterfaces int
 	}{
 		{
