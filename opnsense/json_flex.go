@@ -15,16 +15,16 @@ import (
 // (86400), a quoted number ("86400"), an empty string ("") or null. All of
 // these decode into an int.
 //
-// Bounds: the token is parsed at the width of the platform int, so the
-// conversion below can never truncate. All release targets are 64-bit,
-// where every legitimate DHCP lease value fits. valid_lifetime tops out
-// at 0xffffffff (4294967295, the "infinite" lease) and expire is a unix
-// timestamp. A value that overflows int, or any non-numeric token, is
-// returned as an error rather than silently coerced to 0, so a malformed
-// payload surfaces loudly instead of emitting a wrong metric. Empty
-// string and null are treated as a legitimate "absent" value and decode
-// to 0.
-type flexInt int
+// Bounds: the token is always parsed at 64-bit width, on every platform,
+// so the conversion below can never truncate. That matters on the 32-bit
+// release target (linux/arm/v6), where int is 32 bits wide and the
+// "infinite" valid_lifetime of 0xffffffff (4294967295) would not fit.
+// expire is a unix timestamp. A value that overflows int64, or any
+// non-numeric token, is returned as an error rather than silently coerced
+// to 0, so a malformed payload surfaces loudly instead of emitting a wrong
+// metric. Empty string and null are treated as a legitimate "absent" value
+// and decode to 0.
+type flexInt int64
 
 func (f *flexInt) UnmarshalJSON(b []byte) error {
 	b = bytes.TrimSpace(b)
@@ -48,9 +48,9 @@ func (f *flexInt) UnmarshalJSON(b []byte) error {
 		b = []byte(s)
 	}
 
-	// Bit size 0 parses at the width of int, so the conversion below is
-	// always lossless. Values that overflow int fail here instead.
-	n, err := strconv.ParseInt(string(b), 10, 0)
+	// Parse at 64-bit width so the conversion below is always lossless.
+	// Values that overflow int64 fail here instead.
+	n, err := strconv.ParseInt(string(b), 10, 64)
 	if err != nil {
 		return fmt.Errorf("flexInt: cannot parse %q as integer: %w", string(b), err)
 	}

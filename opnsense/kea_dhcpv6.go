@@ -32,14 +32,14 @@ type KeaDhcpv6LeasesResponse struct {
 }
 
 type KeaDhcpv6Lease struct {
-	Expiration           int
-	ValidLifetime        int
-	PreferredLifetime    int
+	Expiration           int64
+	ValidLifetime        int64
+	PreferredLifetime    int64
 	Hwaddr               string
 	Duid                 string
 	Hostname             string
 	Address              string
-	PrefixLength         int
+	PrefixLength         int64
 	If                   string
 	InterfaceName        string
 	InterfaceDescription string
@@ -73,10 +73,10 @@ func parseDHCPv6Leases(leases KeaDhcpv6LeasesResponse) (KeaDhcpv6Leases, *APICal
 			data.ReservedLeaseCount[row.InterfaceName] += 1
 		}
 
-		expiration := int(row.Expiration)
-		lifetime := int(row.ValidLifetime)
-		preferredLifetime := int(row.PreferredLifetime)
-		prefixLength := int(row.PrefixLength)
+		expiration := int64(row.Expiration)
+		lifetime := int64(row.ValidLifetime)
+		preferredLifetime := int64(row.PreferredLifetime)
+		prefixLength := int64(row.PrefixLength)
 
 		// Add the information in
 		data.Leases = append(data.Leases, KeaDhcpv6Lease{

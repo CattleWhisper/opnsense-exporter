@@ -13,10 +13,10 @@ type ipsecSearchResponse struct {
 		IkeId       string `json:"ikeid"`
 		Name        string `json:"name"`
 		InstallTime string `json:"install-time"`
-		BytesIn     int    `json:"bytes-in"`
-		BytesOut    int    `json:"bytes-out"`
-		PacketsIn   int    `json:"packets-in"`
-		PacketsOut  int    `json:"packets-out"`
+		BytesIn     int64  `json:"bytes-in"`
+		BytesOut    int64  `json:"bytes-out"`
+		PacketsIn   int64  `json:"packets-in"`
+		PacketsOut  int64  `json:"packets-out"`
 	} `json:"rows"`
 	RowCount int `json:"rowCount"`
 	Total    int `json:"total"`
@@ -28,13 +28,13 @@ type ipsecPhase2 struct {
 	Name        string
 	SpiIn       string
 	SpiOut      string
-	InstallTime int
-	RekeyTime   int
-	LifeTime    int
-	BytesIn     int
-	BytesOut    int
-	PacketsIn   int
-	PacketsOut  int
+	InstallTime int64
+	RekeyTime   int64
+	LifeTime    int64
+	BytesIn     int64
+	BytesOut    int64
+	PacketsIn   int64
+	PacketsOut  int64
 }
 
 type ipsecPhase2SearchResponse struct {
@@ -58,11 +58,11 @@ type IPsec struct {
 	Connected   int
 	IkeId       string
 	Name        string
-	InstallTime int
-	BytesIn     int
-	BytesOut    int
-	PacketsIn   int
-	PacketsOut  int
+	InstallTime int64
+	BytesIn     int64
+	BytesOut    int64
+	PacketsIn   int64
+	PacketsOut  int64
 	Phase2      []ipsecPhase2
 }
 
@@ -119,7 +119,7 @@ func (c *Client) FetchIPsecPhase1() (IPsecPhase1, *APICallError) {
 
 	for _, v := range resp.Rows {
 
-		installTime, err := strconv.Atoi(v.InstallTime)
+		installTime, err := strconv.ParseInt(v.InstallTime, 10, 64)
 		if err != nil {
 			installTime = 0
 		}
@@ -130,31 +130,31 @@ func (c *Client) FetchIPsecPhase1() (IPsecPhase1, *APICallError) {
 			c.log.Error("failed to fetch ipsec phase2", "error", err2)
 		} else {
 			for _, v2 := range phase2.Rows {
-				p2InstallTime, err := strconv.Atoi(v2.InstallTime)
+				p2InstallTime, err := strconv.ParseInt(v2.InstallTime, 10, 64)
 				if err != nil {
 					p2InstallTime = 0
 				}
-				rekeyTime, err := strconv.Atoi(v2.RekeyTime)
+				rekeyTime, err := strconv.ParseInt(v2.RekeyTime, 10, 64)
 				if err != nil {
 					rekeyTime = 0
 				}
-				lifeTime, err := strconv.Atoi(v2.LifeTime)
+				lifeTime, err := strconv.ParseInt(v2.LifeTime, 10, 64)
 				if err != nil {
 					lifeTime = 0
 				}
-				bytesIn, err := strconv.Atoi(v2.BytesIn)
+				bytesIn, err := strconv.ParseInt(v2.BytesIn, 10, 64)
 				if err != nil {
 					bytesIn = 0
 				}
-				bytesOut, err := strconv.Atoi(v2.BytesOut)
+				bytesOut, err := strconv.ParseInt(v2.BytesOut, 10, 64)
 				if err != nil {
 					bytesOut = 0
 				}
-				packetsIn, err := strconv.Atoi(v2.PacketsIn)
+				packetsIn, err := strconv.ParseInt(v2.PacketsIn, 10, 64)
 				if err != nil {
 					packetsIn = 0
 				}
-				packetsOut, err := strconv.Atoi(v2.PacketsOut)
+				packetsOut, err := strconv.ParseInt(v2.PacketsOut, 10, 64)
 				if err != nil {
 					packetsOut = 0
 				}
