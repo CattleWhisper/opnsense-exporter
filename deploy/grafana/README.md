@@ -2,7 +2,7 @@
 
 | File | Dashboard | What it shows |
 | --- | --- | --- |
-| `opnsense-wan-ip-family.json` | OPNsense / WAN - IPv4 vs IPv6 | WAN download/upload split by IP family, IPv6 share, daily volume, packets, average packet size and blocked traffic. Pick the WAN by its pf name (e.g. `igb0`, `pppoe0`). |
+| `opnsense-wan-ip-family.json` | OPNsense / WAN - IPv4 vs IPv6 | WAN download/upload split by IP family, IPv6 share, daily volume, packets, average packet size and blocked traffic. Pick the WAN by its pf name (e.g. `igb0`, `pppoe0`); with several uplinks (BGP / multi-WAN) select all of them: the panels add them up and the Per WAN row breaks them down. |
 | `opnsense-interfaces.json` | OPNsense / Interfaces | Link state, line rate, throughput, utilization, packets, multicast, errors, queue drops and send queue per interface. |
 | `opnsense-firewall.json` | OPNsense / Firewall (pf) | State table usage, state inserts/removals, rule matches, pf anomaly and limit counters, source tracking, allowed/blocked traffic per pf interface, memory limits and timeouts. |
 | `dashboard-v1.json` | OPNSense | The original overview: exporter status, services, gateways, interfaces and ARP. |

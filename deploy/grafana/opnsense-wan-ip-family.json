@@ -1,7 +1,7 @@
 {
   "uid": "opnsense-wan-ip-family",
   "title": "OPNsense / WAN - IPv4 vs IPv6",
-  "description": "WAN traffic split by IP family, from the pf per-interface byte and packet counters.",
+  "description": "WAN traffic split by IP family, from the pf per-interface byte and packet counters. Supports several WANs at once.",
   "tags": [
     "opnsense",
     "opnsense-exporter"
@@ -88,8 +88,8 @@
       {
         "type": "query",
         "name": "wan",
-        "label": "WAN (pf interface)",
-        "description": "pf name of the WAN interface, e.g. igb0 or pppoe0",
+        "label": "WAN (pf interfaces)",
+        "description": "pf names of the WAN interfaces, e.g. igb0 or pppoe0. Select every uplink (BGP / multi-WAN): the panels add them up, and Per WAN breaks them down.",
         "datasource": {
           "type": "prometheus",
           "uid": "${datasource}"
@@ -102,7 +102,7 @@
         },
         "refresh": 2,
         "sort": 1,
-        "multi": false,
+        "multi": true,
         "includeAll": false,
         "current": {},
         "hide": 0,
@@ -128,7 +128,7 @@
     {
       "type": "stat",
       "title": "Download now",
-      "description": "IPv4 + IPv6 traffic allowed in on the WAN, last rate interval.",
+      "description": "IPv4 + IPv6 traffic allowed in on the selected WANs, last rate interval. With several WANs selected, every panel shows their sum; see Per WAN for the breakdown.",
       "targets": [
         {
           "datasource": {
@@ -136,7 +136,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) + rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])) * 8",
+          "expr": "(sum(rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum(rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))) * 8",
           "legendFormat": "Download",
           "refId": "A",
           "range": true,
@@ -192,7 +192,7 @@
     {
       "type": "stat",
       "title": "Upload now",
-      "description": "IPv4 + IPv6 traffic allowed out of the WAN, last rate interval.",
+      "description": "IPv4 + IPv6 traffic allowed out of the selected WANs, last rate interval. With several WANs selected, every panel shows their sum; see Per WAN for the breakdown.",
       "targets": [
         {
           "datasource": {
@@ -200,7 +200,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) + rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])) * 8",
+          "expr": "(sum(rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum(rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))) * 8",
           "legendFormat": "Upload",
           "refId": "A",
           "range": true,
@@ -264,7 +264,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range])) / (sum(increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range])) + sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range])))",
+          "expr": "sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) / (sum(increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) + sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])))",
           "legendFormat": "IPv6",
           "refId": "A",
           "range": true,
@@ -337,7 +337,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range])) / (sum(increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range])) + sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range])))",
+          "expr": "sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) / (sum(increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) + sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])))",
           "legendFormat": "IPv6",
           "refId": "A",
           "range": true,
@@ -410,7 +410,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "IPv4",
           "refId": "A",
           "range": true,
@@ -422,7 +422,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "IPv6",
           "refId": "B",
           "range": true,
@@ -517,7 +517,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "IPv4",
           "refId": "A",
           "range": true,
@@ -529,7 +529,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "IPv6",
           "refId": "B",
           "range": true,
@@ -629,7 +629,7 @@
     {
       "type": "timeseries",
       "title": "Download by family",
-      "description": "Traffic allowed in on the WAN, stacked by IP family.",
+      "description": "Traffic allowed in on the selected WANs, stacked by IP family.",
       "targets": [
         {
           "datasource": {
@@ -637,7 +637,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "IPv4",
           "refId": "A",
           "range": true,
@@ -649,7 +649,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "IPv6",
           "refId": "B",
           "range": true,
@@ -741,7 +741,7 @@
     {
       "type": "timeseries",
       "title": "Upload by family",
-      "description": "Traffic allowed out of the WAN, stacked by IP family.",
+      "description": "Traffic allowed out of the selected WANs, stacked by IP family.",
       "targets": [
         {
           "datasource": {
@@ -749,7 +749,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "IPv4",
           "refId": "A",
           "range": true,
@@ -761,7 +761,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "IPv6",
           "refId": "B",
           "range": true,
@@ -861,7 +861,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) / (rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) + rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]))",
+          "expr": "sum(rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) / (sum(rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum(rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])))",
           "legendFormat": "Download",
           "refId": "A",
           "range": true,
@@ -873,7 +873,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) / (rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) + rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]))",
+          "expr": "sum(rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) / (sum(rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum(rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])))",
           "legendFormat": "Upload",
           "refId": "B",
           "range": true,
@@ -942,7 +942,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) + rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])) * 8",
+          "expr": "(sum(rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum(rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))) * 8",
           "legendFormat": "Download: IPv4 + IPv6 (pf)",
           "refId": "A",
           "range": true,
@@ -954,7 +954,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_interfaces_received_bytes_total{opnsense_instance=\"$instance\", device=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_interfaces_received_bytes_total{opnsense_instance=\"$instance\", device=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "Download: interface",
           "refId": "B",
           "range": true,
@@ -966,7 +966,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "(rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) + rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])) * 8",
+          "expr": "(sum(rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum(rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))) * 8",
           "legendFormat": "Upload: IPv4 + IPv6 (pf)",
           "refId": "C",
           "range": true,
@@ -978,7 +978,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_interfaces_transmitted_bytes_total{opnsense_instance=\"$instance\", device=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_interfaces_transmitted_bytes_total{opnsense_instance=\"$instance\", device=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "Upload: interface",
           "refId": "D",
           "range": true,
@@ -1038,7 +1038,7 @@
     },
     {
       "type": "row",
-      "title": "Daily volume",
+      "title": "Per WAN",
       "collapsed": false,
       "id": 14,
       "gridPos": {
@@ -1051,8 +1051,8 @@
     },
     {
       "type": "timeseries",
-      "title": "Downloaded per day",
-      "description": "Bytes downloaded per IP family in the 24 h ending at each point.",
+      "title": "Download per WAN",
+      "description": "IPv4 + IPv6 traffic allowed in, stacked by WAN.",
       "targets": [
         {
           "datasource": {
@@ -1060,32 +1060,20 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[1d]))",
-          "legendFormat": "IPv4",
+          "expr": "(sum by (interface) (rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum by (interface) (rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))) * 8",
+          "legendFormat": "{{interface}}",
           "refId": "A",
-          "range": true,
-          "instant": false
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${datasource}"
-          },
-          "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[1d]))",
-          "legendFormat": "IPv6",
-          "refId": "B",
           "range": true,
           "instant": false
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "decbytes",
+          "unit": "bps",
           "custom": {
-            "drawStyle": "bars",
+            "drawStyle": "line",
             "lineWidth": 1,
-            "fillOpacity": 60,
+            "fillOpacity": 40,
             "gradientMode": "opacity",
             "showPoints": "never",
             "spanNulls": false,
@@ -1097,40 +1085,10 @@
           },
           "color": {
             "mode": "palette-classic"
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "IPv4"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "#5794F2"
-                }
-              }
-            ]
           },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "IPv6"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "mode": "fixed",
-                  "fixedColor": "#73BF69"
-                }
-              }
-            ]
-          }
-        ]
+          "min": 0
+        },
+        "overrides": []
       },
       "options": {
         "legend": {
@@ -1150,7 +1108,7 @@
       },
       "id": 15,
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
         "y": 24
@@ -1158,13 +1116,12 @@
       "datasource": {
         "type": "prometheus",
         "uid": "${datasource}"
-      },
-      "interval": "1d"
+      }
     },
     {
       "type": "timeseries",
-      "title": "Uploaded per day",
-      "description": "Bytes uploaded per IP family in the 24 h ending at each point.",
+      "title": "Upload per WAN",
+      "description": "IPv4 + IPv6 traffic allowed out, stacked by WAN.",
       "targets": [
         {
           "datasource": {
@@ -1172,7 +1129,380 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[1d]))",
+          "expr": "(sum by (interface) (rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum by (interface) (rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))) * 8",
+          "legendFormat": "{{interface}}",
+          "refId": "A",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bps",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 40,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": false,
+            "lineInterpolation": "smooth",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 16,
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "IPv6 share of download per WAN",
+      "description": "Fraction of each WAN's download carried over IPv6.",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (interface) (rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) / (sum by (interface) (rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) + sum by (interface) (rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])))",
+          "legendFormat": "{{interface}}",
+          "refId": "A",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "custom": {
+            "drawStyle": "line",
+            "lineWidth": 1,
+            "fillOpacity": 0,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": false,
+            "lineInterpolation": "smooth",
+            "stacking": {
+              "mode": "none",
+              "group": "A"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          },
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "min",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 17,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 33
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      }
+    },
+    {
+      "type": "table",
+      "title": "Per WAN in range",
+      "description": "Bytes per WAN and IP family over the selected time range.",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (interface) (increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
+          "legendFormat": "__auto",
+          "refId": "A",
+          "range": false,
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (interface) (increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
+          "legendFormat": "__auto",
+          "refId": "B",
+          "range": false,
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (interface) (increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
+          "legendFormat": "__auto",
+          "refId": "C",
+          "range": false,
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (interface) (increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
+          "legendFormat": "__auto",
+          "refId": "D",
+          "range": false,
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (interface) (increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) / (sum by (interface) (increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) + sum by (interface) (increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])))",
+          "legendFormat": "__auto",
+          "refId": "E",
+          "range": false,
+          "instant": true,
+          "format": "table"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum by (interface) (increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) / (sum by (interface) (increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])) + sum by (interface) (increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range])))",
+          "legendFormat": "__auto",
+          "refId": "F",
+          "range": false,
+          "instant": true,
+          "format": "table"
+        }
+      ],
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {}
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "interface": "WAN",
+              "Value #A": "Download IPv4",
+              "Value #B": "Download IPv6",
+              "Value #C": "Upload IPv4",
+              "Value #D": "Upload IPv6",
+              "Value #E": "IPv6 share down",
+              "Value #F": "IPv6 share up"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "filterable": false
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Download IPv4"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Download IPv6"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Upload IPv4"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Upload IPv6"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "decbytes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPv6 share down"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPv6 share up"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percentunit"
+              },
+              {
+                "id": "decimals",
+                "value": 1
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        },
+        "sortBy": [
+          {
+            "displayName": "Download IPv4",
+            "desc": true
+          }
+        ]
+      },
+      "id": 18,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 33
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      }
+    },
+    {
+      "type": "row",
+      "title": "Daily volume",
+      "collapsed": false,
+      "id": 19,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 41
+      },
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Downloaded per day",
+      "description": "Bytes downloaded per IP family in the 24 h ending at each point.",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum(increase(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[1d]))",
           "legendFormat": "IPv4",
           "refId": "A",
           "range": true,
@@ -1184,7 +1514,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[1d]))",
+          "expr": "sum(increase(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[1d]))",
           "legendFormat": "IPv6",
           "refId": "B",
           "range": true,
@@ -1260,12 +1590,124 @@
           "sort": "desc"
         }
       },
-      "id": 16,
+      "id": 20,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 42
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${datasource}"
+      },
+      "interval": "1d"
+    },
+    {
+      "type": "timeseries",
+      "title": "Uploaded per day",
+      "description": "Bytes uploaded per IP family in the 24 h ending at each point.",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum(increase(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[1d]))",
+          "legendFormat": "IPv4",
+          "refId": "A",
+          "range": true,
+          "instant": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "sum(increase(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[1d]))",
+          "legendFormat": "IPv6",
+          "refId": "B",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "decbytes",
+          "custom": {
+            "drawStyle": "bars",
+            "lineWidth": 1,
+            "fillOpacity": 60,
+            "gradientMode": "opacity",
+            "showPoints": "never",
+            "spanNulls": false,
+            "lineInterpolation": "smooth",
+            "stacking": {
+              "mode": "normal",
+              "group": "A"
+            }
+          },
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPv4"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#5794F2"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPv6"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed",
+                  "fixedColor": "#73BF69"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true,
+          "calcs": [
+            "mean",
+            "max",
+            "lastNotNull"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "id": 21,
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 24
+        "y": 42
       },
       "datasource": {
         "type": "prometheus",
@@ -1277,12 +1719,12 @@
       "type": "row",
       "title": "Packets and blocked traffic",
       "collapsed": false,
-      "id": 17,
+      "id": 22,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 32
+        "y": 50
       },
       "panels": []
     },
@@ -1297,7 +1739,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_in_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "In IPv4",
           "refId": "A",
           "range": true,
@@ -1309,7 +1751,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_in_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "In IPv6",
           "refId": "B",
           "range": true,
@@ -1321,7 +1763,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "-rate(opnsense_firewall_out_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "-sum(rate(opnsense_firewall_out_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "Out IPv4",
           "refId": "C",
           "range": true,
@@ -1333,7 +1775,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "-rate(opnsense_firewall_out_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "-sum(rate(opnsense_firewall_out_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "Out IPv6",
           "refId": "D",
           "range": true,
@@ -1439,12 +1881,12 @@
           "sort": "desc"
         }
       },
-      "id": 18,
+      "id": 23,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 33
+        "y": 51
       },
       "datasource": {
         "type": "prometheus",
@@ -1462,7 +1904,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) / rate(opnsense_firewall_in_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_in_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) / sum(rate(opnsense_firewall_in_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "In IPv4",
           "refId": "A",
           "range": true,
@@ -1474,7 +1916,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) / rate(opnsense_firewall_in_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_in_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) / sum(rate(opnsense_firewall_in_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "In IPv6",
           "refId": "B",
           "range": true,
@@ -1486,7 +1928,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) / rate(opnsense_firewall_out_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_out_ipv4_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) / sum(rate(opnsense_firewall_out_ipv4_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "Out IPv4",
           "refId": "C",
           "range": true,
@@ -1498,7 +1940,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) / rate(opnsense_firewall_out_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_out_ipv6_pass_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) / sum(rate(opnsense_firewall_out_ipv6_pass_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "Out IPv6",
           "refId": "D",
           "range": true,
@@ -1544,12 +1986,12 @@
           "sort": "desc"
         }
       },
-      "id": 19,
+      "id": 24,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 33
+        "y": 51
       },
       "datasource": {
         "type": "prometheus",
@@ -1559,7 +2001,7 @@
     {
       "type": "timeseries",
       "title": "Blocked inbound",
-      "description": "Packets blocked by the firewall on the WAN, inbound.",
+      "description": "Packets blocked by the firewall on the selected WANs, inbound.",
       "targets": [
         {
           "datasource": {
@@ -1567,7 +2009,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv4_block_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_in_ipv4_block_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "IPv4 packets",
           "refId": "A",
           "range": true,
@@ -1579,7 +2021,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv6_block_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval])",
+          "expr": "sum(rate(opnsense_firewall_in_ipv6_block_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval]))",
           "legendFormat": "IPv6 packets",
           "refId": "B",
           "range": true,
@@ -1656,12 +2098,12 @@
           "sort": "desc"
         }
       },
-      "id": 20,
+      "id": 25,
       "gridPos": {
         "h": 8,
         "w": 8,
         "x": 16,
-        "y": 33
+        "y": 51
       },
       "datasource": {
         "type": "prometheus",
@@ -1671,7 +2113,7 @@
     {
       "type": "timeseries",
       "title": "Blocked bytes",
-      "description": "Traffic blocked by the firewall on the WAN.",
+      "description": "Traffic blocked by the firewall on the selected WANs.",
       "targets": [
         {
           "datasource": {
@@ -1679,7 +2121,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv4_block_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_in_ipv4_block_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "In IPv4",
           "refId": "A",
           "range": true,
@@ -1691,7 +2133,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_in_ipv6_block_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_in_ipv6_block_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "In IPv6",
           "refId": "B",
           "range": true,
@@ -1703,7 +2145,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_out_ipv4_block_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_out_ipv4_block_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "Out IPv4",
           "refId": "C",
           "range": true,
@@ -1715,7 +2157,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "rate(opnsense_firewall_out_ipv6_block_bytes_total{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__rate_interval]) * 8",
+          "expr": "sum(rate(opnsense_firewall_out_ipv6_block_bytes_total{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__rate_interval])) * 8",
           "legendFormat": "Out IPv6",
           "refId": "D",
           "range": true,
@@ -1761,12 +2203,12 @@
           "sort": "desc"
         }
       },
-      "id": 21,
+      "id": 26,
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 41
+        "y": 59
       },
       "datasource": {
         "type": "prometheus",
@@ -1784,7 +2226,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_in_ipv4_block_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_in_ipv4_block_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "In IPv4",
           "refId": "A",
           "range": false,
@@ -1796,7 +2238,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_in_ipv6_block_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_in_ipv6_block_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "In IPv6",
           "refId": "B",
           "range": false,
@@ -1808,7 +2250,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_out_ipv4_block_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_out_ipv4_block_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "Out IPv4",
           "refId": "C",
           "range": false,
@@ -1820,7 +2262,7 @@
             "uid": "${datasource}"
           },
           "editorMode": "code",
-          "expr": "sum(increase(opnsense_firewall_out_ipv6_block_packets{opnsense_instance=\"$instance\", interface=\"$wan\"}[$__range]))",
+          "expr": "sum(increase(opnsense_firewall_out_ipv6_block_packets{opnsense_instance=\"$instance\", interface=~\"$wan\"}[$__range]))",
           "legendFormat": "Out IPv6",
           "refId": "D",
           "range": false,
@@ -1924,12 +2366,12 @@
         "minVizHeight": 16,
         "maxVizHeight": 300
       },
-      "id": 22,
+      "id": 27,
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 59
       },
       "datasource": {
         "type": "prometheus",
