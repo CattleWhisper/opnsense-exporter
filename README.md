@@ -99,7 +99,7 @@ version: '3'
 services:
   opnsense-exporter:
     image: ghcr.io/athennamind/opnsense-exporter:latest
-    container_name: opensense-exporter
+    container_name: opnsense-exporter
     restart: always
     command:
       - --opnsense.protocol=https
@@ -132,7 +132,7 @@ version: '3'
 services:
   opnsense-exporter:
     image: ghcr.io/athennamind/opnsense-exporter:latest
-    container_name: opensense-exporter
+    container_name: opnsense-exporter
     restart: always
     command:
       - --opnsense.protocol=https
@@ -194,7 +194,7 @@ Gathering metrics for specific subsystems can be disabled with the following fla
 - `--exporter.disable-kea-dhcpv6` - Disable the scraping of Kea DHCPv6 leases. Defaults to `false`.
 - `--exporter.disable-temperature` - Disable the scraping of temperature sensors. Defaults to `false`.
 
-To disable the exporter metrics itself use the following flag:
+To disable the exporter metrics itself, use the following flag:
 
 - `--web.disable-exporter-metrics` - Exclude metrics about the exporter itself (promhttp_*, process_*, go_*). Defaults to `false`.
 
@@ -246,7 +246,7 @@ Flags:
                                  ($OPNSENSE_EXPORTER_OPS_PROTOCOL)
       --opnsense.address=OPNSENSE.ADDRESS
                                  Hostname or IP address of OPNsense API ($OPNSENSE_EXPORTER_OPS_API)
-      --opnsense.api-key=""      API key to use to connect to OPNsense API. This flag/ENV or the OPS_API_KEY_FILE my be set.
+      --opnsense.api-key=""      API key to use to connect to OPNsense API. This flag/ENV or the OPS_API_KEY_FILE may be set.
                                  ($OPNSENSE_EXPORTER_OPS_API_KEY)
       --opnsense.api-secret=""   API secret to use to connect to OPNsense API. This flag/ENV or the OPS_API_SECRET_FILE my be
                                  set. ($OPNSENSE_EXPORTER_OPS_API_SECRET)
