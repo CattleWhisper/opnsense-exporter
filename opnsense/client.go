@@ -93,7 +93,7 @@ func NewClient(cfg options.OPNSenseConfig, userAgentVersion string, log *slog.Lo
 		headers: map[string]string{
 			"Accept":          "application/json",
 			"User-Agent":      fmt.Sprintf("prometheus-opnsense-exporter/%s", userAgentVersion),
-			"Accept-Encoding": "gzip, deflate, br",
+			"Accept-Encoding": "gzip",
 		},
 		sslInsecure: cfg.Insecure,
 		httpClient: &http.Client{
